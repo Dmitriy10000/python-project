@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Python web chat</title>
+	<link rel="stylesheet" href="static/css/chat.css">
+</head>
+<body>
+	<div class="web-page">
+		<div class="sidebar">
+			<div class="sidebar-header">
+				<button class="unselected">📝</button>
+				<button class="selected">👨‍💼</button>
+			</div>
+			<div class="search">
+				<iframe src="search" frameborder="0" class="iframe-search"></iframe>
+			</div>
+		</div>
+		<div class="chat-container">
+			<div class="chat-header">
+				<h1>Название чата</h1>
+			</div>
+			<div class="chat-content">
+				<p>Сообщение</p>
+				<p>Сообщение</p>
+				<p>Сообщение</p>
+				<p>Сообщение</p>
+			</div>
+			<div class="chat-footer">
+				<form action="/send_message" method="post">
+					<input type="text" name="message" id="message-input" placeholder="Введите сообщение">
+					<button id="message-button" type="submit">📨</button>
+				</form>
+		</div>
+	</div>
+</body>
+</html>

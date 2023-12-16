@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Create User</title>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('#login').on('input', function() {
+				var login = $(this).val();
+	
+				$.ajax({
+					type: 'POST',
+					url: '/check_login_availability',
+					data: {'login': login},
+					success: function(response) {
+						if (response.available) {
+							$('#loginAvailability').text('Логин свободен');
+						} else {
+							$('#loginAvailability').text('Логин занят');
+						}
+					}
+				});
+			});
+		});
+	</script>
+	
+</head>
+<body>
+	<p><a href="{{ url_for('home') }}">Back to Home</a></p>
+	<h1>Create User</h1>
+	<form action="/register" method="post">
+		<label for="login">Login:</label>
+		<input type="text" name="login" id="login" required>
+		<span id="loginAvailability"></span><br>
+		<label for="password_hash">Password:</label>
+		<input type="password" name="password_hash" required><br>
+		<label for="email">Email:</label>
+		<input type="email" name="email" required><br>
+		<label for="name">Name:</label>
+		<input type="text" name="name" required><br>
+		<label for="surname">Surname:</label>
+		<input type="text" name="surname" required><br>
+		<button type="submit">Create User</button>
+	</form>
+</body>
+</html>
