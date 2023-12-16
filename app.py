@@ -27,11 +27,20 @@ from classes.invites import Invites
 from classes.messages import Messages
 from classes.chats import Chats
 from classes.chat_members import ChatMembers
+import logging
 import json
 import os
 
+# Сохраняем логи в папку logs с названием в виде даты
+path = os.path.dirname(os.path.abspath(__file__))
+# Создаем папку logs, если ее нет
+if not os.path.exists(f'{path}/logs'):
+	os.makedirs(f'{path}/logs')
+# Создаем файл логов с названием в виде даты
+logging.basicConfig(filename=f'{path}/logs/' + datetime.now().strftime("%Y-%m-%d") + '.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
+
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # Замените на свой секретный ключ
+app.secret_key = os.urandom(24)
 
 with open('DB_cfg.json', 'r') as f:
 	DB_cfg = json.load(f)
@@ -44,16 +53,16 @@ Session = sessionmaker(bind=engine)
 
 Users.metadata.create_all(engine)
 print('Users table created')
-# Friends.metadata.create_all(engine)
-# print('Friends table created')
-# Invites.metadata.create_all(engine)
-# print('Invites table created')
-# Messages.metadata.create_all(engine)
-# print('Messages table created')
-# Chats.metadata.create_all(engine)
-# print('Chats table created')
-# ChatMembers.metadata.create_all(engine)
-# print('ChatMembers table created')
+Friends.metadata.create_all(engine)
+print('Friends table created')
+Invites.metadata.create_all(engine)
+print('Invites table created')
+Messages.metadata.create_all(engine)
+print('Messages table created')
+Chats.metadata.create_all(engine)
+print('Chats table created')
+ChatMembers.metadata.create_all(engine)
+print('ChatMembers table created')
 
 
 # Маршрут для создания пользователя
@@ -105,9 +114,9 @@ def login():
 
 		if user:
 			# Успешный вход, устанавливаем пользователя в сессию
-			session['user_id'] = user.id
+			session['user_id'] = user.user_id
 			flash('Вы успешно вошли в систему!', 'success')
-			return redirect('/profile')
+			return redirect('/')
 		else:
 			# Неправильный логин или пароль, выводим сообщение об ошибке
 			flash('Неправильный логин или пароль. Пожалуйста, попробуйте снова.', 'error')
@@ -153,24 +162,79 @@ def logout():
 # Маршрут для чата
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
-	# user_id = session.get('user_id')
-	# if user_id:
-	# 	user = Session().query(Users).get(user_id)
-	# 	return render_template('chat.html', user=user)
-	# else:
-	# 	return redirect('/login')
-	return render_template('chat.html')
+	user_id = session.get('user_id')
+	if user_id:
+		user = Session().query(Users).get(user_id)
+		return render_template('chat.html', user=user)
+	else:
+		return redirect('/login')
+	# return render_template('chat.html')
 
 
 # Создаем маршрут для поиска пользователей
 @app.route('/search', methods=['GET', 'POST'])
 def search_users():
 	if request.method == 'POST':
-		search_query = request.form['search_query']
+		print(request.form)
+		search_query = request.form['search']
 		users = Session().query(Users).filter(Users.login.ilike(f"%{search_query}%")).all()
-		return render_template('search_results.html', users=users)
+		return render_template('search.html', users=users)
 
 	return render_template('search.html')
+
+
+# Создаем маршрут для добавления друзей
+@app.route('/add_user', methods=['POST'])
+def add_user():
+	if request.method == 'POST':
+		print(request.form)
+		if request.form['type'] == 'add':
+			user_id1 = session.get('user_id')
+			user_id2 = request.form['user_id']
+			print('Запрос в друзья от', user_id1, 'к', user_id2)
+			# Проверяем, существует ли пользователь с таким логином
+			existing_user = Session().query(Users).filter_by(user_id=user_id1).first()
+			if existing_user:
+				# Проверяем, не пытается ли пользователь добавить самого себя
+				if user_id1 == user_id2:
+					print('Нельзя добавить самого себя')
+				else:
+					# Проверяем, не является ли пользователь другом
+					existing_friend = Session().query(Friends).filter_by(user_id1=user_id1, user_id2=user_id2).first()
+					if existing_friend:
+						print('Пользователь уже является другом')
+					else:
+						# Проверяем, не было ли уже отправлено приглашение
+						existing_invite = Session().query(Invites).filter_by(user_id1=user_id1, user_id2=user_id2).first()
+						if existing_invite:
+							print('Приглашение уже отправлено')
+						else:
+							# Проверяем, не было ли уже получено приглашение
+							existing_invite = Session().query(Invites).filter_by(user_id1=user_id2, user_id2=user_id1).first()
+							if existing_invite:
+								print('Приглашение уже получено, добавляем в друзья')
+								new_friend = Friends(user_id1=user_id2, user_id2=user_id1)
+								session = Session()
+								session.add(new_friend)
+								session.commit()
+								print('Пользователь успешно добавлен в друзья')
+								# Удаляем приглашение
+								session.query(Invites).filter_by(user_id1=user_id2, user_id2=user_id1).delete()
+								session.commit()
+								print('Приглашение удалено')
+							else:
+								print('Отправляем приглашение')
+								print('user_id', user_id1)
+								print('friend_id', user_id2)
+								print('datetime.now()', datetime.now())
+								new_invite = Invites(user_id1=user_id1, user_id2=user_id2)
+								session = Session()
+								session.add(new_invite)
+								session.commit()
+								print('Приглашение успешно отправлено')
+			else:
+				print('Пользователь не найден')
+	return redirect('/search')
 
 if __name__ == '__main__':
 	app.run(debug=True)
