@@ -257,6 +257,9 @@ def global_user_search():
 	if request.method == 'POST':
 		print(request.form)
 		search_query = request.form['search_query']
+		# Проверяем запрос на пустоту
+		if search_query == '':
+			return jsonify({'error': 'Пустой запрос'})
 		users = Session().query(Users).filter(Users.login.ilike(f"%{search_query}%")).all()
 		# Пакуем данные в json и отправляем
 		users_json = []
