@@ -1,6 +1,9 @@
 *{
-	transition-duration: 1s;
+	animation-duration: 1s;
 	box-sizing:border-box;
+}
+*:hover{
+	animation-duration: 1s;
 }
 :root{
 	--main_bg: #293245;
@@ -47,6 +50,7 @@
 .logo a:hover{
 	font-weight: 900;
 	font-size: 2.5em;
+	animation-duration: 1s;
 }
 .us_logo{
 	background-color: #293245;
@@ -59,6 +63,7 @@
 }
 .us_logo:hover{
 	background-color: #4BD295;
+	animation-duration: 1s;
 }
 .us_logo img{
 	height: 25px;
@@ -94,6 +99,7 @@ input[type=text]:hover{
 	color: white;
 	background-size: 30px;
 	background-color: #4BD295;
+	animation-duration: 1s;
 }
 .header{
 	height: 20vh;
@@ -127,10 +133,12 @@ input[type=text]:hover{
 .chat_input button:hover{
 	font-size: 18px;
 	color:white;
+	animation-duration: 1s;
 }
 .chat_input input[type=text]:hover{
 	font-size: 16px;
 	background-color: var(--main_bg);
+	animation-duration: 1s;
 }
 .search_result{
 	display: flex;
@@ -146,7 +154,8 @@ input[type=text]:hover{
 .search_result:hover{
 	animation-duration: 1s;
 	background-color: #2F4E51;
-	border-right: 1px solid rgb(56,197,133)
+	border-right: 1px solid rgb(56,197,133);
+	animation-duration: 1s;
 }
 .search_result button{
 	background-color: #4BD295;
@@ -168,23 +177,34 @@ input[type=text]:hover{
 	width: 30px;
  } */
 .search_result button:hover svg.icon{
-	transition-duration: 0s;
+	transition-duration: 1s;
 	fill: white;
+	animation-duration: 1s;
 	
 }
 .search_result:hover .us_name{
 	font-size: 24px;
 	color:white;
+	animation-duration: 1s;
 }
 .search_result:hover .us_logo{
 	width: 70px;
 	height: 70px;
 	margin: 0;
 	padding: 10px;
+	animation-duration: 1s;
 }
 .search_result:hover .us_logo img{
 	height: 30px;
 	width: 30px;
+	animation-duration: 1s;
 }
+
+.search_result button svg.icon:hover{
+	fill: white;
+	animation-duration: 1s;
+
+}
+
 
 
