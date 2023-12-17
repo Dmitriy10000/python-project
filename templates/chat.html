@@ -42,6 +42,7 @@
 
 	<script>
 		var searchTimeout;
+		// Выполняем AJAX-запрос к серверу для глобального поиска
 		function globalSearch() {
 			clearTimeout(searchTimeout);
 			searchTimeout = setTimeout(function () {
@@ -50,7 +51,6 @@
 				// Очищаем предыдущие результаты поиска
 				document.getElementById('searchResults').innerHTML = '';
 
-				// Выполняем AJAX-запрос к серверу для глобального поиска
 				// Не отправляем searchQuery если он пустой
 				if (searchQuery == '') {
 					return;
@@ -70,14 +70,6 @@
 					// Обрабатываем результаты поиска
 					var resultsContainer = document.getElementById('searchResults');
 					data.forEach(user => {
-						// Сделать для каждого пользователя отображение в виде:
-						// <div class="search_result">
-						// 	<div class="us_logo">
-						// 		<img src="static/icons/us_logo.png" alt="">
-						// 	</div>
-						// 	<div>Имя Фамилия</div>
-						// 	<button>Add</button>
-						// </div>
 						var listItem = document.createElement('div');
 						listItem.classList.add('search_result');
 						listItem.innerHTML = `
@@ -86,16 +78,15 @@
 							</div>
 							<div>${user.name} ${user.surname}</div>
 						`;
-						// <button id="add ${user.user_id}" class="add" onclick="addToFriendList(${user.user_id})">Add to friend list</button>
-						// <button id="pm ${user.user_id}" class="pm" onclick="personalMessage(${user.user_id})">Personal message</button>
 						if (user.is_friend == false) {
 							listItem.innerHTML += `<button id="add ${user.user_id}" class="add" onclick="addToFriendList(${user.user_id})">Add to friend list</button>`;
 						}
 						else if (user.is_invite_sent == true) {
-							listItem.innerHTML += `<button id="add ${user.user_id}" class="cancel_request" onclick="cancelRequest(${user.user_id})">Cancel request</button>`;
+							listItem.innerHTML += `<button id="cancel ${user.user_id}" class="cancel_request" onclick="cancelRequest(${user.user_id})">Cancel request</button>`;
 						}
 						else if (user.is_invite_received == true) {
-							listItem.innerHTML += `<button id="add ${user.user_id}" class="accept_request" onclick="acceptRequest(${user.user_id})">Accept request</button>`;
+							listItem.innerHTML += `<button id="accept ${user.user_id}" class="accept_request" onclick="acceptRequest(${user.user_id})">Accept request</button>`;
+							listItem.innerHTML += `<button id="decline ${user.user_id}" class="decline_request" onclick="declineRequest(${user.user_id})">Decline request</button>`;
 						}
 						listItem.innerHTML += `<button id="pm ${user.user_id}" class="pm" onclick="personalMessage(${user.user_id})">Personal message</button>`;
 						resultsContainer.appendChild(listItem);
@@ -104,8 +95,9 @@
 				.catch(error => console.error('Error:', error));
 			}, 300);
 		}
+
+		// Отправляем AJAX-запрос на добавление пользователя в друзья
 		function addToFriendList(user_id) {
-			// Отправляем AJAX-запрос на добавление пользователя в друзья
 			fetch('/add_friend', {
 				method: 'POST',
 				headers: {
@@ -121,16 +113,18 @@
 				console.log('Success:', data);
 				// Если data.success не пустой, то значит запрос на добавление в друзья был успешно отправлен
 				if (data.success != '') {
-					// Меняем текст на кнопке и класс кнопки на "Cancel request"
+					// Меняем текст, класс и id кнопки на "Cancel request"
 					document.getElementById(`add ${user_id}`).innerHTML = 'Cancel request';
 					document.getElementById(`add ${user_id}`).classList.remove('add');
 					document.getElementById(`add ${user_id}`).classList.add('cancel_request');
 					document.getElementById(`add ${user_id}`).setAttribute('onclick', `cancelRequest(${user_id})`);
+					document.getElementById(`add ${user_id}`).setAttribute('id', `cancel ${user_id}`);
 				}
 			})
 		}
+
+		// Отправляем AJAX-запрос на отмену запроса на добавление пользователя в друзья
 		function cancelRequest(user_id) {
-			// Отправляем AJAX-запрос на отмену запроса на добавление пользователя в друзья
 			fetch('/add_friend', {
 				method: 'POST',
 				headers: {
