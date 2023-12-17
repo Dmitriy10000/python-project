@@ -44,9 +44,7 @@
 		var searchTimeout;
 		function globalSearch() {
 			clearTimeout(searchTimeout);
-
 			searchTimeout = setTimeout(function () {
-
 				var searchQuery = document.getElementById('globalSearchInput').value;
 				
 				// Очищаем предыдущие результаты поиска
@@ -69,7 +67,6 @@
 				.then(response => response.json())
 				.then(data => {
 					console.log('Success:', data);
-					// Если
 					// Обрабатываем результаты поиска
 					var resultsContainer = document.getElementById('searchResults');
 					data.forEach(user => {
@@ -88,7 +85,8 @@
 								<img src="static/icons/us_logo.png" alt="">
 							</div>
 							<div>${user.name} ${user.surname}</div>
-							<button onclick="addUserToChat(${user.user_id})">Add</button>
+							<button onclick="addToFriendList(${user.user_id})">Add to friend list</button>
+							<button onclick="personalMessage(${user.user_id})">Personal message</button>
 						`;
 						resultsContainer.appendChild(listItem);
 					});
@@ -96,6 +94,34 @@
 				.catch(error => console.error('Error:', error));
 			}, 300);
 		}
+		function addToFriendList(user_id) {
+			// Отправляем AJAX-запрос на добавление пользователя в друзья
+			fetch('/add_friend', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams({
+					user_id: user_id,
+				}),
+			})
+			.then(response => response.json())
+			.then(data => {
+				console.log('Success:', data);
+			})
+		}
+		// function personalMessage() {
+		// 	// Отправляем AJAX-запрос на добавление пользователя в друзья
+		// 	fetch('/personal_message', {
+		// 		method: 'POST',
+		// 		headers: {
+		// 			'Content-Type': 'application/x-www-form-urlencoded',
+		// 		},
+		// 		body: new URLSearchParams({
+		// 			user_id: user_id,
+		// 		}),
+		// 	})
+		// }
 	</script>
 </body>
 </html>

@@ -190,68 +190,77 @@ def search_users():
 
 
 # Создаем маршрут для добавления друзей
-@app.route('/add_user', methods=['POST'])
-def add_user():
+@app.route('/add_friend', methods=['POST'])
+def add_friend():
 	# Вывести id пользователя из сессии
 	print(session.get('user_id'))
 	if request.method == 'POST':
 		print(request.form)
-		if request.form['type'] == 'add':
-			user_id1 = session.get('user_id')
-			user_id2 = request.form['user_id']
-			# Если пользователь не авторизован, то перенаправляем на страницу входа
-			if not user_id1:
-				return redirect('/login')
+		user_id1 = session.get('user_id')
+		user_id2 = request.form['user_id']
 
-			print("bool=", int(user_id1) == int(user_id2))
-			print('Запрос в друзья от', user_id1, 'к', user_id2)
-			# Проверяем, существует ли пользователь с таким логином
-			existing_user = Session().query(Users).filter_by(user_id=user_id1).first()
-			if existing_user:
-				# Проверяем, не пытается ли пользователь добавить самого себя
-				if int(user_id1) == int(user_id2):
-					print('Нельзя добавить самого себя')
-				else:
-					# Проверяем, не является ли пользователь другом
-					existing_friend = Session().query(Friends).filter_by(user_id1=user_id1, user_id2=user_id2).first()
-					if existing_friend:
-						print('Пользователь уже является другом')
-					else:
-						# Проверяем, не было ли уже отправлено приглашение
-						existing_invite = Session().query(Invites).filter_by(user_id1=user_id1, user_id2=user_id2).first()
-						if existing_invite:
-							print('Приглашение уже отправлено')
-						else:
-							# Проверяем, не было ли уже получено приглашение
-							existing_invite = Session().query(Invites).filter_by(user_id1=user_id2, user_id2=user_id1).first()
-							if existing_invite:
-								print('Приглашение уже получено, добавляем в друзья')
-								new_friend = Friends(user_id1=user_id2, user_id2=user_id1)
-								SQLsession = Session()
-								SQLsession.add(new_friend)
-								SQLsession.commit()
-								print('Пользователь успешно добавлен в друзья')
-								# Удаляем приглашение
-								SQLsession.query(Invites).filter_by(user_id1=user_id2, user_id2=user_id1).delete()
-								SQLsession.commit()
-								print('Приглашение удалено')
-							else:
-								print('Отправляем приглашение')
-								print('user_id', user_id1)
-								print('friend_id', user_id2)
-								print('datetime.now()', datetime.now())
-								new_invite = Invites(user_id1=user_id1, user_id2=user_id2)
-								SQLsession = Session()
-								SQLsession.add(new_invite)
-								SQLsession.commit()
-								print('Приглашение успешно отправлено')
+		# Если пользователь не авторизован, то перенаправляем на страницу входа
+		if not user_id1:
+			return redirect('/login')
+
+		print('Запрос в друзья от', user_id1, 'к', user_id2)
+
+		# Проверяем, существует ли пользователь с таким логином
+		existing_user = Session().query(Users).filter_by(user_id=user_id1).first()
+		if existing_user:
+			# Проверяем, не пытается ли пользователь добавить самого себя
+			if int(user_id1) == int(user_id2):
+				print('Нельзя добавить самого себя')
+				return jsonify({'error': 'Нельзя добавить самого себя'})
+			
 			else:
-				print('Пользователь не найден')
+				# Проверяем, не является ли пользователь другом
+				existing_friend = Session().query(Friends).filter_by(user_id1=user_id1, user_id2=user_id2).first()
+				if existing_friend:
+					print('Пользователь уже является другом')
+					return jsonify({'error': 'Пользователь уже является другом'})
+				
+				else:
+					# Проверяем, не было ли уже отправлено приглашение
+					existing_invite = Session().query(Invites).filter_by(user_id1=user_id1, user_id2=user_id2).first()
+					if existing_invite:
+						print('Приглашение уже отправлено')
+						return jsonify({'error': 'Приглашение уже отправлено'})
+					
+					else:
+						# Проверяем, не было ли уже получено приглашение
+						existing_invite = Session().query(Invites).filter_by(user_id1=user_id2, user_id2=user_id1).first()
+						if existing_invite:
+							print('Приглашение уже получено, добавляем в друзья')
+							new_friend = Friends(user_id1=user_id2, user_id2=user_id1)
+							SQLsession = Session()
+							SQLsession.add(new_friend)
+							SQLsession.commit()
+							print('Пользователь успешно добавлен в друзья')
+
+							# Удаляем приглашение
+							SQLsession.query(Invites).filter_by(user_id1=user_id2, user_id2=user_id1).delete()
+							SQLsession.commit()
+							print('Приглашение удалено')
+							return jsonify({'success': 'Пользователь успешно добавлен в друзья'})
+						
+						else:
+							print('Отправляем приглашение')
+							new_invite = Invites(user_id1=user_id1, user_id2=user_id2)
+							SQLsession = Session()
+							SQLsession.add(new_invite)
+							SQLsession.commit()
+							print('Приглашение успешно отправлено')
+							return jsonify({'success': 'Приглашение успешно отправлено'})
+						
+		else:
+			print('Пользователь не найден')
+			return jsonify({'error': 'Пользователь не найден'})
+		
 	return redirect('/search')
 
 
 # Принимаем ajax запрос на получение списка друзей и возвращаем json
-# /global_user_search
 @app.route('/global_user_search', methods=['GET', 'POST'])
 def global_user_search():
 	if request.method == 'POST':
@@ -268,13 +277,6 @@ def global_user_search():
 		return jsonify(users_json)
 	
 	return jsonify({'error': 'Ошибка'})
-
-
-# /add_friend
-@app.route('/add_friend', methods=['GET', 'POST'])
-def add_friend():
-	print(request.form)
-	return jsonify({'text': 'text'})
 
 
 if __name__ == '__main__':
