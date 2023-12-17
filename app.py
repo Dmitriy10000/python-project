@@ -33,10 +33,8 @@ import os
 
 # Сохраняем логи в папку logs с названием в виде даты
 path = os.path.dirname(os.path.abspath(__file__))
-# Создаем папку logs, если ее нет
 if not os.path.exists(f'{path}/logs'):
 	os.makedirs(f'{path}/logs')
-# Создаем файл логов с названием в виде даты
 logging.basicConfig(filename=f'{path}/logs/' + datetime.now().strftime("%Y-%m-%d") + '.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
 app = Flask(__name__)
@@ -81,9 +79,10 @@ def register():
 			return jsonify({'error': 'Пользователь с таким логином уже существует'})
 
 		new_user = Users(login=login, password_hash=password_hash, created_at=datetime.now(), email=email, name=name, surname=surname)
-		session = Session()
-		session.add(new_user)
-		session.commit()
+		SQLsession = Session()
+		SQLsession.add(new_user)
+		SQLsession.commit()
+
 		
 		return redirect('/profile')
 
@@ -140,7 +139,7 @@ def profile():
 # Маршрут для отображения домашней страницы
 @app.route('/')
 def home():
-	user = get_logged_in_user()  # Реализуйте функцию get_logged_in_user(), которая возвращает текущего пользователя или None
+	user = get_logged_in_user()  # Функцию get_logged_in_user(), которая возвращает текущего пользователя или None
 	return render_template('index.html', user=user)
 
 
@@ -186,10 +185,15 @@ def search_users():
 # Создаем маршрут для добавления друзей
 @app.route('/add_user', methods=['POST'])
 def add_user():
+	# Вывести id пользователя из сессии
+	print(session.get('user_id'))
 	if request.method == 'POST':
 		print(request.form)
 		if request.form['type'] == 'add':
+			print(session)
+			print(session.get('user_id'))
 			user_id1 = session.get('user_id')
+			print(user_id1)
 			user_id2 = request.form['user_id']
 			print('Запрос в друзья от', user_id1, 'к', user_id2)
 			# Проверяем, существует ли пользователь с таким логином
@@ -214,13 +218,13 @@ def add_user():
 							if existing_invite:
 								print('Приглашение уже получено, добавляем в друзья')
 								new_friend = Friends(user_id1=user_id2, user_id2=user_id1)
-								session = Session()
-								session.add(new_friend)
-								session.commit()
+								SQLsession = Session()
+								SQLsession.add(new_friend)
+								SQLsession.commit()
 								print('Пользователь успешно добавлен в друзья')
 								# Удаляем приглашение
-								session.query(Invites).filter_by(user_id1=user_id2, user_id2=user_id1).delete()
-								session.commit()
+								SQLsession.query(Invites).filter_by(user_id1=user_id2, user_id2=user_id1).delete()
+								SQLsession.commit()
 								print('Приглашение удалено')
 							else:
 								print('Отправляем приглашение')
@@ -228,9 +232,9 @@ def add_user():
 								print('friend_id', user_id2)
 								print('datetime.now()', datetime.now())
 								new_invite = Invites(user_id1=user_id1, user_id2=user_id2)
-								session = Session()
-								session.add(new_invite)
-								session.commit()
+								SQLsession = Session()
+								SQLsession.add(new_invite)
+								SQLsession.commit()
 								print('Приглашение успешно отправлено')
 			else:
 				print('Пользователь не найден')

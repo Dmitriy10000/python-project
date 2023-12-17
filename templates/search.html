@@ -31,12 +31,12 @@
 					</div>
 					<div class="add-user">
 						<form action="/add_user" method="post">
-							<input type="hidden" name="user_id" value="{{ user.id }}">
+							<input type="hidden" name="user_id" value="{{ user.user_id }}">
 							<input type="hidden" name="type" value="add">
 							<button type="submit">+👨‍💼</button>
 						</form>
 						<form action="/add_user" method="post">
-							<input type="hidden" name="user_id" value="{{ user.id }}">
+							<input type="hidden" name="user_id" value="{{ user.user_id }}">
 							<input type="hidden" name="type" value="write">
 							<button type="submit">🖋</button>
 						</form>
@@ -59,7 +59,7 @@
 					</div>
 					<div class="actions">
 						<form action="/invite" method="post">
-							<input type="hidden" name="user_id" value="{{ user.id }}">
+							<input type="hidden" name="user_id" value="{{ user.user_id }}">
 							<button type="accept">+</button>
 							<button type="decline">-</button>
 						</form>
