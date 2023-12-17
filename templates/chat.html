@@ -5,34 +5,38 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Python web chat</title>
 	<link rel="stylesheet" href="static/css/chat.css">
+	<link rel="stylesheet" href="static/css/bootstrap-reboot.min.css">
 </head>
 <body>
-	<div class="web-page">
-		<div class="sidebar">
-			<div class="sidebar-header">
-				<button class="unselected">📝</button>
-				<button class="selected">👨‍💼</button>
+	<div class="container">
+		<div class="shell">
+			<div class="sidebar">
+				<div class="logo_shell">
+					<div class="logo"><a href="#">CHATTY</a></div>
+
+					<div class="us_logo">
+						<img src="static/icons/us_logo.png" alt="">
+					</div>
+				</div>
+				<div class="search_in_chat">
+					<form>
+						<input type="text" name="search" placeholder="Search for users and groups">
+					  </form>
+				</div>
 			</div>
-			<div class="search">
-				<iframe src="search" frameborder="0" class="iframe-search"></iframe>
+			<div class="header">
+				<div class="header_name">Volodya</div>
 			</div>
-		</div>
-		<div class="chat-container">
-			<div class="chat-header">
-				<h1>Название чата</h1>
-			</div>
-			<div class="chat-content">
-				<p>Сообщение</p>
-				<p>Сообщение</p>
-				<p>Сообщение</p>
-				<p>Сообщение</p>
-			</div>
-			<div class="chat-footer">
-				<form action="/send_message" method="post">
-					<input type="text" name="message" id="message-input" placeholder="Введите сообщение">
-					<button id="message-button" type="submit">📨</button>
-				</form>
-		</div>
 	</div>
+	<div class="footer_input">
+		<div class="chat_input">
+			<form>
+				<input type="text" name="chat" placeholder="Type here">
+				
+				<button type="submit">Send</button>
+			</form>
+	</div>
+	</div>
+
 </body>
 </html>

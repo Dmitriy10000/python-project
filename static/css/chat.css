@@ -1,101 +1,133 @@
-body {
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 0;
+*{
+	transition-duration: 1s;
 }
+:root{
+	--main_bg: #293245;
+	--border_color:#333B4A;
+	--border_style: solid var(--border_color);
+	--border: 2px var(--border_style); 
 
-.web-page {
+}	
+	body {
+	
+}
+.container{
+
+	min-height: 100vh;
+	background-color: var(--main_bg);
+
+}
+.shell{
 	display: flex;
-	flex-direction: row;
-	width: 100vw;
+}
+.sidebar{
+
+	margin-left: 0;
 	height: 100vh;
+	width: 500px;
+	background-color: #2E3748;
+	border-right: var(--border);
 }
-
-.sidebar {
-	display: flex;
-	flex-direction: column;
-	width: 30%;
-	height: 100vh;
-	background-color: #f0f0f0;
-	z-index: 1;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.search {
-	flex-grow: 1;
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-}
-
-.iframe-search {
-	flex-grow: 1;
-	width: 100%;
-	height: 100%;
-	border: none;
-}
-
-.sidebar-header {
-	display: flex;
-	flex-direction: row;
-	background-color: #007bff;
-	color: #fff;
+.logo_shell{
+	border-bottom: var(--border);
+	height: 10vh;
 	text-align: center;
-	height: 100px;
-}
-
-.sidebar-header button {
-	width: 100%;
-	height: 100%;
-	font-size: 50px;
-	background-color: #6081e3;
-}
-
-.selected {
-	background-color: #728ee3 !important;
-}
-
-.unselected:hover {
-	background-color: #728ee3;
-}
-
-.chat-container {
+    vertical-align: middle;
 	display: flex;
-	flex-direction: column;
-	background-color: #caf3f2;
-	width: 100%;
-	height: 100vh;
+	justify-content: space-between;
 }
+.logo a{
 
-.chat-header {
-	display: flex;
-	flex-direction: row;
-	background-color: #007bff;
-	color: #fff;
-	text-align: center;
-	height: 100px;
-	width: 100%;
+	color: #4BD295;
+	font-weight: 800;
+	font-size: 2em;
+  	margin: 10px;
+	text-decoration: none;
+
 }
-
-.chat-header h1 {
-	margin: auto;
+.logo a:hover{
+	font-weight: 900;
+	font-size: 2.5em;
 }
-
-.chat-content {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-	width: 100%;
-	height: 100%;
+.us_logo{
+	background-color: #293245;
+	border-radius: 100%;
+	height: 50px;
+	width: 50px;
+	margin: 10px;
 }
+.us_logo:hover{
+	background-color: #4BD295;
+}
+.us_logo img{
+	height: 25px;
+	width: 25px;
+	margin: 10px;
+}
+.search_in_chat{
+	border-bottom: var(--border);
+	height: 10vh;
+}
+input[type=text] {
+	width: 95%;
+	box-sizing: border-box;
+	border: var(--border);
+	border-radius: 7px;
+	font-size: 16px;
+	background-color: #293245;
+	background-image: url('../../static/icons/search-magnifying-glass-svgrepo-com.svg');
+	background-position: 10px 10px;
+	background-repeat: no-repeat;
+	background-size: 25px;
+	padding: 12px 20px 12px 40px;
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	outline: none;
+	height: min-content;
 
-.chat-footer {
-	display: flex;
-	flex-direction: row;
-	background-color: #007bff;
-	color: #fff;
-	text-align: center;
-	height: 100px;
+}
+input[type=text]:hover{
+	font-size: 17px;
+	color: white;
+	background-size: 30px;
+	background-color: #4BD295;
+}
+.header{
+	height: 20vh;
 	width: 100%;
-	margin-bottom: auto;
+	background-color: #2E3748;
+	border-bottom: var(--border);
+}
+.footer_input{
+
+	margin-left: 369px;
+    position: fixed;
+    bottom: 0;
+    width: 74%;
+    padding: 10px;
+	background-color: #2E3748;
+	height: max-content;
+	border-top: var(--border);
+
+}
+.chat_input input[type=text]{
+	background-image: none;
+	width: 85%;
+	font-size: 16px;
+}
+.chat_input button{
+	background-color:#4BD295;
+	padding: 15px;
+	border:none;
+	border-radius:10px
+}
+.chat_input button:hover{
+	font-size: 18px;
+	color:white;
+}
+.chat_input input[type=text]:hover{
+	font-size: 16px;
+	background-color: var(--main_bg);
 }
