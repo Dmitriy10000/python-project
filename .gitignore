@@ -1,3 +1,4 @@
 temp/
 classes/__pycache__/
 logs/
+DB_cfg.json

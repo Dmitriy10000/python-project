@@ -8,11 +8,6 @@
 # Flask
 # cryptography
 # SQLAlchemy
-# 
-# Функции мессенджера:
-# Слева страницы должен быть список контактов, нажимая на который в правой части страницы открывается диалог с этим контактом, куда можно писать и получать сообщения.
-# Так же в левой части страницы можно будет нажать на иконку друзья, что бы перейти на вкладку добавления друзей
-# Напиши для меня код веб приложения
 
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
@@ -30,6 +25,7 @@ from classes.chat_members import ChatMembers
 import logging
 import json
 import os
+import hash
 
 # Сохраняем логи в папку logs с названием в виде даты
 path = os.path.dirname(os.path.abspath(__file__))
@@ -68,23 +64,30 @@ print('ChatMembers table created')
 def register():
 	if request.method == 'POST':
 		login = request.form['login']
-		password_hash = request.form['password_hash']
+		password = request.form['password']
+		# Хэшируем пароль
+		print('password', password)
+		password_hash = hash.hash_password(password)
+		print('password_hash', password_hash)
+		is_password_valid = hash.verify_password(password, password_hash)
+		print("Is Password Valid:", is_password_valid)
+		db_hash = hash.convert_to_db_format(password_hash)
+		print('db_hash', db_hash)
 		email = request.form['email']
 		name = request.form['name']
 		surname = request.form['surname']
-
 		# Проверяем, существует ли пользователь с таким логином
 		existing_user = Session().query(Users).filter_by(login=login).first()
 		if existing_user:
 			return jsonify({'error': 'Пользователь с таким логином уже существует'})
 
-		new_user = Users(login=login, password_hash=password_hash, created_at=datetime.now(), email=email, name=name, surname=surname)
+		new_user = Users(login=login, password_hash=db_hash, created_at=datetime.now(), email=email, name=name, surname=surname)
 		SQLsession = Session()
 		SQLsession.add(new_user)
 		SQLsession.commit()
-
-		
-		return redirect('/profile')
+		user = SQLsession.query(Users).filter_by(login=login).first()
+		session['user_id'] = user.user_id
+		return redirect('/')
 
 	return render_template('register.html')
 
@@ -94,10 +97,10 @@ def register():
 def check_login_availability():
 	if request.method == 'POST':
 		login = request.form['login']
-
 		existing_user = Session().query(Users).filter_by(login=login).first()
 		if existing_user:
 			return jsonify({'available': False})
+
 		else:
 			return jsonify({'available': True})
 
@@ -107,15 +110,17 @@ def check_login_availability():
 def login():
 	if request.method == 'POST':
 		login = request.form['login']
-		password_hash = request.form['password_hash']
-
-		user = Session().query(Users).filter_by(login=login, password_hash=password_hash).first()
-
-		if user:
+		password = request.form['password']
+		user = Session().query(Users).filter_by(login=login).first()
+		user.password_hash = hash.convert_from_db_format(user.password_hash)
+		is_password_valid = hash.verify_password(password, user.password_hash)
+		print("Is Password Valid:", is_password_valid)
+		if is_password_valid:
 			# Успешный вход, устанавливаем пользователя в сессию
 			session['user_id'] = user.user_id
 			flash('Вы успешно вошли в систему!', 'success')
 			return redirect('/')
+
 		else:
 			# Неправильный логин или пароль, выводим сообщение об ошибке
 			flash('Неправильный логин или пароль. Пожалуйста, попробуйте снова.', 'error')
@@ -128,7 +133,6 @@ def login():
 @app.route('/profile')
 def profile():
 	user_id = session.get('user_id')
-
 	if user_id:
 		user = Session().query(Users).get(user_id)
 		return render_template('profile.html', user=user)
@@ -148,6 +152,7 @@ def get_logged_in_user():
 	user_id = session.get('user_id')
 	if user_id:
 		return Session().query(Users).get(user_id)
+	
 	return None
 
 
@@ -165,8 +170,10 @@ def chat():
 	if user_id:
 		user = Session().query(Users).get(user_id)
 		return render_template('chat.html', user=user)
+
 	else:
 		return redirect('/login')
+
 	# return render_template('chat.html')
 
 
@@ -190,17 +197,19 @@ def add_user():
 	if request.method == 'POST':
 		print(request.form)
 		if request.form['type'] == 'add':
-			print(session)
-			print(session.get('user_id'))
 			user_id1 = session.get('user_id')
-			print(user_id1)
 			user_id2 = request.form['user_id']
+			# Если пользователь не авторизован, то перенаправляем на страницу входа
+			if not user_id1:
+				return redirect('/login')
+
+			print("bool=", int(user_id1) == int(user_id2))
 			print('Запрос в друзья от', user_id1, 'к', user_id2)
 			# Проверяем, существует ли пользователь с таким логином
 			existing_user = Session().query(Users).filter_by(user_id=user_id1).first()
 			if existing_user:
 				# Проверяем, не пытается ли пользователь добавить самого себя
-				if user_id1 == user_id2:
+				if int(user_id1) == int(user_id2):
 					print('Нельзя добавить самого себя')
 				else:
 					# Проверяем, не является ли пользователь другом
@@ -239,6 +248,31 @@ def add_user():
 			else:
 				print('Пользователь не найден')
 	return redirect('/search')
+
+
+# Принимаем ajax запрос на получение списка друзей и возвращаем json
+# /global_user_search
+@app.route('/global_user_search', methods=['GET', 'POST'])
+def global_user_search():
+	if request.method == 'POST':
+		print(request.form)
+		search_query = request.form['search_query']
+		users = Session().query(Users).filter(Users.login.ilike(f"%{search_query}%")).all()
+		# Пакуем данные в json и отправляем
+		users_json = []
+		for user in users:
+			users_json.append({'user_id': user.user_id, 'login': user.login, 'name': user.name, 'surname': user.surname})
+		return jsonify(users_json)
+	
+	return jsonify({'error': 'Ошибка'})
+
+
+# /add_friend
+@app.route('/add_friend', methods=['GET', 'POST'])
+def add_friend():
+	print(request.form)
+	return jsonify({'text': 'text'})
+
 
 if __name__ == '__main__':
 	app.run(debug=True)
