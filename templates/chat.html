@@ -41,65 +41,131 @@
 
 
 	<script>
+		var searchTimeout;
 		function globalSearch() {
-			var searchQuery = document.getElementById('globalSearchInput').value;
+			clearTimeout(searchTimeout);
+			searchTimeout = setTimeout(function () {
+				var searchQuery = document.getElementById('globalSearchInput').value;
+				
+				// Очищаем предыдущие результаты поиска
+				document.getElementById('searchResults').innerHTML = '';
 
-			// Очищаем предыдущие результаты поиска
-			document.getElementById('searchResults').innerHTML = '';
-
-			// Выполняем AJAX-запрос к серверу для глобального поиска
-			fetch('/global_user_search', {
+				// Выполняем AJAX-запрос к серверу для глобального поиска
+				// Не отправляем searchQuery если он пустой
+				if (searchQuery == '') {
+					return;
+				}
+				fetch('/global_user_search', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: new URLSearchParams({
+						search_query: searchQuery,
+					}),
+				})
+				.then(response => response.json())
+				.then(data => {
+					console.log('Success:', data);
+					// Обрабатываем результаты поиска
+					var resultsContainer = document.getElementById('searchResults');
+					data.forEach(user => {
+						// Сделать для каждого пользователя отображение в виде:
+						// <div class="search_result">
+						// 	<div class="us_logo">
+						// 		<img src="static/icons/us_logo.png" alt="">
+						// 	</div>
+						// 	<div>Имя Фамилия</div>
+						// 	<button>Add</button>
+						// </div>
+						var listItem = document.createElement('div');
+						listItem.classList.add('search_result');
+						listItem.innerHTML = `
+							<div class="us_logo">
+								<img src="static/icons/us_logo.png" alt="">
+							</div>
+							<div>${user.name} ${user.surname}</div>
+						`;
+						// <button id="add ${user.user_id}" class="add" onclick="addToFriendList(${user.user_id})">Add to friend list</button>
+						// <button id="pm ${user.user_id}" class="pm" onclick="personalMessage(${user.user_id})">Personal message</button>
+						if (user.is_friend == false) {
+							listItem.innerHTML += `<button id="add ${user.user_id}" class="add" onclick="addToFriendList(${user.user_id})">Add to friend list</button>`;
+						}
+						else if (user.is_invite_sent == true) {
+							listItem.innerHTML += `<button id="add ${user.user_id}" class="cancel_request" onclick="cancelRequest(${user.user_id})">Cancel request</button>`;
+						}
+						else if (user.is_invite_received == true) {
+							listItem.innerHTML += `<button id="add ${user.user_id}" class="accept_request" onclick="acceptRequest(${user.user_id})">Accept request</button>`;
+						}
+						listItem.innerHTML += `<button id="pm ${user.user_id}" class="pm" onclick="personalMessage(${user.user_id})">Personal message</button>`;
+						resultsContainer.appendChild(listItem);
+					});
+				})
+				.catch(error => console.error('Error:', error));
+			}, 300);
+		}
+		function addToFriendList(user_id) {
+			// Отправляем AJAX-запрос на добавление пользователя в друзья
+			fetch('/add_friend', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded',
 				},
 				body: new URLSearchParams({
-					search_query: searchQuery,
+					request_type: 'add',
+					user_id: user_id,
 				}),
 			})
 			.then(response => response.json())
 			.then(data => {
 				console.log('Success:', data);
-				// Обрабатываем результаты поиска
-				var resultsContainer = document.getElementById('searchResults');
-				data.forEach(user => {
-					// ВАНЯ СЮДА ДОБАВЬ СВОЙ КОД (отредачь этот код)
-					// Создаем div-элемент для отображения результатов поиска
-					var listItem = document.createElement('div');
-					// Добавляем класс к div-элементу
-					listItem.classList.add('search_result');
-					// Добавляем элемент в контейнер с результатами поиска
-					resultsContainer.appendChild(listItem);
-					// Отображаем имя и фамилию пользователя
-					listItem.innerHTML = user.name + ' ' + user.surname;
-					// В конце добавляем кнопку для добавления пользователя в друзья
-					var addButton = document.createElement('button');
-					addButton.innerHTML = 'Add';
-					addButton.onclick = function() {
-						// Выполняем AJAX-запрос к серверу для добавления пользователя в друзья
-						fetch('/add_friend', {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/x-www-form-urlencoded',
-							},
-							body: new URLSearchParams({
-								user_id: user.id,
-							}),
-						})
-						.then(response => response.json())
-						.then(data => {
-							console.log('Success:', data);
-							// Если пользователь успешно добавлен в друзья, то удаляем его из результатов поиска
-							listItem.remove();
-						})
-						.catch(error => console.error('Error:', error));
-					};
-					listItem.appendChild(addButton);
-					
-				});
+				// Если data.success не пустой, то значит запрос на добавление в друзья был успешно отправлен
+				if (data.success != '') {
+					// Меняем текст на кнопке и класс кнопки на "Cancel request"
+					document.getElementById(`add ${user_id}`).innerHTML = 'Cancel request';
+					document.getElementById(`add ${user_id}`).classList.remove('add');
+					document.getElementById(`add ${user_id}`).classList.add('cancel_request');
+					document.getElementById(`add ${user_id}`).setAttribute('onclick', `cancelRequest(${user_id})`);
+				}
 			})
-			.catch(error => console.error('Error:', error));
 		}
+		function cancelRequest(user_id) {
+			// Отправляем AJAX-запрос на отмену запроса на добавление пользователя в друзья
+			fetch('/add_friend', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams({
+					request_type: 'cancel',
+					user_id: user_id,
+				}),
+			})
+			.then(response => response.json())
+			.then(data => {
+				console.log('Success:', data);
+				// Если data.success не пустой, то значит запрос на добавление в друзья был успешно отправлен
+				if (data.success != '') {
+					// Меняем текст на кнопке и класс кнопки на "Add to friend list"
+					document.getElementById(`add ${user_id}`).innerHTML = 'Add to friend list';
+					document.getElementById(`add ${user_id}`).classList.remove('cancel_request');
+					document.getElementById(`add ${user_id}`).classList.add('add');
+					document.getElementById(`add ${user_id}`).setAttribute('onclick', `addToFriendList(${user_id})`);
+				}
+			})
+		}
+		// function personalMessage() {
+		// 	// Отправляем AJAX-запрос на добавление пользователя в друзья
+		// 	fetch('/personal_message', {
+		// 		method: 'POST',
+		// 		headers: {
+		// 			'Content-Type': 'application/x-www-form-urlencoded',
+		// 		},
+		// 		body: new URLSearchParams({
+		// 			user_id: user_id,
+		// 		}),
+		// 	})
+		// }
 	</script>
 </body>
 </html>

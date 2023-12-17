@@ -1,7 +1,7 @@
 {
-	"HOST": "localhost",
-	"PORT": "5432",
-	"USER": "postgres",
-	"PASSWORD": "0",
-	"DB": "Python-project"
+    "HOST": "viaduct.proxy.rlwy.net",
+    "PORT": "53077",
+    "USER": "postgres",
+    "PASSWORD": "251eDD1*CB132CbFGd56Cb43556CBdae",
+    "DB": "railway"
 }
