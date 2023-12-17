@@ -351,7 +351,8 @@ def add_friend():
 				return jsonify({'error': 'Пользователь уже является другом'})
 			
 			# Добавляем в друзья
-			new_friend = Friends(user_id1=user_id1, user_id2=user_id2)
+			# user_id1 меньше user_id2
+			new_friend = Friends(user_id1=min(int(user_id1), int(user_id2)), user_id2=max(int(user_id1), int(user_id2)))
 			SQLsession.add(new_friend)
 			SQLsession.commit()
 			print('Пользователь успешно добавлен в друзья')
@@ -372,54 +373,43 @@ def global_user_search():
 	# Проверяем запрос на пустоту
 	if search_query == '':
 		return jsonify({'error': 'Пустой запрос'})
-	print('Запрос не пустой')
 	
 	# Ищем пользователей по запросу
 	with Session() as SQLsession:
 		users = SQLsession.query(Users).filter(Users.login.ilike(f"%{search_query}%")).all()
-		print('Найдено', len(users), 'пользователей')
 
 	# Удаляем из списка текущего пользователя
 	user_id = session.get('user_id')
 	for user in users:
 		if user.user_id == user_id:
 			users.remove(user)
-			print('Удалили текущего пользователя из списка')
 			break
 
 	# Пакуем данные в json и отправляем
 	users_json = []
 	with Session() as SQLsession:
 		for user in users:
-			print(user.user_id, user.login, user.name, user.surname)
 			# Проверяем, не являются ли пользователи друзьями
 			# user_id1 меньше user_id2
 			exiting_friend = SQLsession.query(Friends).filter_by(user_id1=min(user_id, user.user_id), user_id2=max(user_id, user.user_id)).first()
-			print('exiting_friend', exiting_friend)
 			if exiting_friend:
 				users_json.append({'user_id': user.user_id, 'login': user.login, 'name': user.name, 'surname': user.surname, 'is_friend': True})
-				print('Добавили пользователя в список с пометкой "друг"')
 				continue
 
 			# Проверяем, не было ли отправлено исходящее приглашение
 			existing_invite = SQLsession.query(Invites).filter_by(user_id1=user_id, user_id2=user.user_id).first()
-			print('existing_invite', existing_invite)
 			if existing_invite:
 				users_json.append({'user_id': user.user_id, 'login': user.login, 'name': user.name, 'surname': user.surname, 'is_invite_sent': True})
-				print('Добавили пользователя в список с пометкой "приглашение отправлено"')
 				continue
 
 			# Проверяем, не было ли получено входящее приглашение
 			existing_invite = SQLsession.query(Invites).filter_by(user_id1=user.user_id, user_id2=user_id).first()
-			print('existing_invite', existing_invite)
 			if existing_invite:
 				users_json.append({'user_id': user.user_id, 'login': user.login, 'name': user.name, 'surname': user.surname, 'is_invite_received': True})
-				print('Добавили пользователя в список с пометкой "приглашение получено"')
 				continue
 
 			# Если ничего не найдено, то добавляем пользователя в список
 			users_json.append({'user_id': user.user_id, 'login': user.login, 'name': user.name, 'surname': user.surname, 'is_friend': False})
-			print('Добавили пользователя в список')
 	return jsonify(users_json)
 
 
