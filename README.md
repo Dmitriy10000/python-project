@@ -4,8 +4,19 @@
 ```
 pip install -r requirements.txt
 ```
-- Настроить файл DB_cfg.json
-- Запускать через файл app.py
+- Создать файл `DB_cfg.json` в корне проекта и заполнить его содержимое.
+  
+  Пример:
+```
+{
+	"HOST": "localhost",
+	"PORT": "5432",
+	"USER": "postgres",
+	"PASSWORD": "postgres",
+	"DB": "Python-project"
+}
+```
+- Запустить файл app.py
 
 
 
