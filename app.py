@@ -15,12 +15,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker, declarative_base
 from datetime import datetime
-from classes.users import Users
-from classes.friends import Friends
-from classes.invites import Invites
-from classes.messages import Messages
-from classes.chats import Chats
-from classes.chat_members import ChatMembers
+from classes.users import Base as UsersBase, Users
+from classes.friends import Base as FriendsBase, Friends
+from classes.invites import Base as InvitesBase, Invites
+from classes.messages import Base as MessagesBase, Messages
+from classes.chats import Base as ChatsBase, Chats
+from classes.chat_members import Base as ChatMembersBase, ChatMembers
 from db_creator import create_database_tables
 import logging
 import json
@@ -430,15 +430,13 @@ if __name__ == '__main__':
 		os.makedirs(f'{path}/logs')
 	logging.basicConfig(filename=f'{path}/logs/' + datetime.now().strftime("%Y-%m-%d") + '.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
+	# Настройки базы данных
 	with open('DB_cfg.json', 'r') as f:
 		DB_cfg = json.load(f)
-
-	# Настройки базы данных
 	engine = create_engine(f"postgresql://{DB_cfg['USER']}:{DB_cfg['PASSWORD']}@{DB_cfg['HOST']}:{DB_cfg['PORT']}/{DB_cfg['DB']}")
-	Base = declarative_base()
-	Base.metadata.create_all(engine)
+	create_database_tables(engine)
 	Session = sessionmaker(bind=engine)
 
-	create_database_tables(engine)
+	# Запускаем приложение
 	app.run(debug=True)
 

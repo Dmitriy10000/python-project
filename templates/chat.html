@@ -140,11 +140,12 @@
 				console.log('Success:', data);
 				// Если data.success не пустой, то значит запрос на добавление в друзья был успешно отправлен
 				if (data.success != '') {
-					// Меняем текст на кнопке и класс кнопки на "Add to friend list"
-					document.getElementById(`add ${user_id}`).innerHTML = 'Add to friend list';
-					document.getElementById(`add ${user_id}`).classList.remove('cancel_request');
-					document.getElementById(`add ${user_id}`).classList.add('add');
-					document.getElementById(`add ${user_id}`).setAttribute('onclick', `addToFriendList(${user_id})`);
+					// Меняем текст, класс и id кнопки на "Add to friend list"
+					document.getElementById(`cancel ${user_id}`).innerHTML = 'Add to friend list';
+					document.getElementById(`cancel ${user_id}`).classList.remove('cancel_request');
+					document.getElementById(`cancel ${user_id}`).classList.add('add');
+					document.getElementById(`cancel ${user_id}`).setAttribute('onclick', `addToFriendList(${user_id})`);
+					document.getElementById(`cancel ${user_id}`).setAttribute('id', `add ${user_id}`);
 				}
 			})
 		}
