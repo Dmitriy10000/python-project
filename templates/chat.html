@@ -13,7 +13,6 @@
 			<div class="sidebar">
 				<div class="logo_shell">
 					<div class="logo"><a href="#">CHATTY</a></div>
-
 					<div class="us_logo">
 						<img src="static/icons/us_logo.png" alt="">
 					</div>
@@ -93,7 +92,7 @@
 							buttonsContainer.innerHTML += `<button id="accept ${user.user_id}" class="accept_request" onclick="acceptRequest(${user.user_id})">Accept request</button>`;
 							buttonsContainer.innerHTML += `<button id="decline ${user.user_id}" class="decline_request" onclick="declineRequest(${user.user_id})">Decline request</button>`;
 						}
-						buttonsContainer.innerHTML += `<button id="pm ${user.user_id}" class="pm" onclick="personalMessage(${user.user_id})">Personal message</button>`;
+						buttonsContainer.innerHTML += `<button id="pm ${user.user_id}" class="pm" onclick="personalMessages(${user.user_id})">Personal message</button>`;
 						// Добавляем <div class="buttons"> внутрь <div class="search_result">
 						listItem.appendChild(buttonsContainer);
 
@@ -124,8 +123,7 @@
 				if (data.success != '') {
 					// Меняем текст, класс и id кнопки на "Cancel request"
 					document.getElementById(`add ${user_id}`).innerHTML = 'Cancel request';
-					document.getElementById(`add ${user_id}`).classList.remove('add');
-					document.getElementById(`add ${user_id}`).classList.add('cancel_request');
+					document.getElementById(`add ${user_id}`).setAttribute('class', 'cancel_request');
 					document.getElementById(`add ${user_id}`).setAttribute('onclick', `cancelRequest(${user_id})`);
 					document.getElementById(`add ${user_id}`).setAttribute('id', `cancel ${user_id}`);
 				}
@@ -151,8 +149,7 @@
 				if (data.success != '') {
 					// Меняем текст, класс и id кнопки на "Add to friend list"
 					document.getElementById(`cancel ${user_id}`).innerHTML = 'Add to friend list';
-					document.getElementById(`cancel ${user_id}`).classList.remove('cancel_request');
-					document.getElementById(`cancel ${user_id}`).classList.add('add');
+					document.getElementById(`cancel ${user_id}`).setAttribute('class', 'add');
 					document.getElementById(`cancel ${user_id}`).setAttribute('onclick', `addToFriendList(${user_id})`);
 					document.getElementById(`cancel ${user_id}`).setAttribute('id', `add ${user_id}`);
 				}
@@ -214,20 +211,53 @@
 		}
 
 		// Открытие личного чата с пользователем
-		function personalMessage(user_id) {
-			fetch('/create_chat', {
+		var current_chat_id = 0;
+		function personalMessages(user_id, from, to) {
+			if (from == undefined) {
+				from = 0;
+			}
+			if (to == undefined) {
+				to = 20;
+			}
+			// Отправляем AJAX-запрос на открытие личного чата с пользователем
+			fetch('/personal_messages', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded',
 				},
 				body: new URLSearchParams({
 					user_id: user_id,
+					from: from,
+					to: to,
 				}),
 			})
 			.then(response => response.json())
 			.then(data => {
 				console.log('Success:', data);
-				
+
+				// Меняем название чата
+				document.getElementById('chat_name').innerHTML = data.chat_name;
+
+				// Проверка на изменение id чата
+				if (current_chat_id != data.chat_id) {
+					// Очищаем предыдущие сообщения
+					document.getElementById('chat_content').innerHTML = '';
+					// Обновляем id чата
+					current_chat_id = data.chat_id;
+				}
+
+				// Обрабатываем сообщения
+				data.messages.forEach(message => {
+					var messageElement = document.createElement('div');
+					messageElement.classList.add('message');
+					if (message.user_id == data.user_id) {
+						messageElement.classList.add('my_message');
+					}
+					messageElement.innerHTML = `
+						<div class="message_text" id="${message.message_id}">${message.message}</div>
+					`;
+					document.getElementById('chat_content').appendChild(messageElement);
+				});
 			})
 		}
 
