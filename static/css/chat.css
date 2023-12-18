@@ -147,6 +147,10 @@ input[type=text]:hover{
 	font-size: 16px;
 	background-color: var(--main_bg);
 }
+.search_list {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
 .search_result{
 	display: flex;
 	color:white;
@@ -156,7 +160,6 @@ input[type=text]:hover{
 	display: flex;
   	/* justify-content: ; */
  	align-items: center;
-	
 }
 .search_result:hover{
 	animation-duration: 1s;

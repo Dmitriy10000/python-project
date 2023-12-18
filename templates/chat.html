@@ -21,7 +21,7 @@
 				<div class="search_in_chat">
 					<input type="text" name="search" id="globalSearchInput" oninput="globalSearch()" placeholder="Search for users and groups" autocomplete="off">
 				</div>
-				<div id="searchResults">
+				<div id="searchResults" class="search_list">
 					<!-- Здесь будут отображаться результаты поиска -->
 				</div>
 			</div>
@@ -80,6 +80,7 @@
 								<img src="static/icons/us_logo.png" alt="">
 							</div>
 							<div>${user.name} ${user.surname}</div>
+							<div class="buttons">
 						`;
 						if (user.is_friend == false) {
 							listItem.innerHTML += `<button id="add ${user.user_id}" class="add" onclick="addToFriendList(${user.user_id})">Add to friend list</button>`;
@@ -92,6 +93,7 @@
 							listItem.innerHTML += `<button id="decline ${user.user_id}" class="decline_request" onclick="declineRequest(${user.user_id})">Decline request</button>`;
 						}
 						listItem.innerHTML += `<button id="pm ${user.user_id}" class="pm" onclick="personalMessage(${user.user_id})">Personal message</button>`;
+						listItem.innerHTML += `</div>`;
 						resultsContainer.appendChild(listItem);
 					});
 				})
@@ -209,7 +211,7 @@
 
 		// Открытие личного чата с пользователем
 		function personalMessage(user_id) {
-			fetch('/personal_message', {
+			fetch('/create_chat', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded',
@@ -221,14 +223,11 @@
 			.then(response => response.json())
 			.then(data => {
 				console.log('Success:', data);
-				// Если data.success не пустой, то значит запрос на добавление в друзья был успешно отправлен
-				if (data.success != '') {
-					// Открываем личный чат с пользователем
-					window.location.href = '/personal_message';
-				}
+				
 			})
 		}
 
+		// Подключение к сокету
 		var socket = io.connect('http://' + document.domain + ':' + location.port);
 		socket.on('message', function(msg) {
 			var chatContent = document.getElementById('chat_content');
