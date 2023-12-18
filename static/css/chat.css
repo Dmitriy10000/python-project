@@ -178,12 +178,9 @@ input[type=text]:hover{
 	display: flex;
   	/* justify-content: ; */
  	align-items: center;
-<<<<<<< HEAD
 	animation-duration: 1s;
 	transition-duration: 1s;
 	
-=======
->>>>>>> 0e8b2b31cab3e60387c5cbf0f88de8725d9706fd
 }
 .search_result:hover{
 	background-color: #2F4E51;
@@ -226,9 +223,9 @@ input[type=text]:hover{
 	padding: 10px;
 	animation-duration: 1s;
 }
-.search_result svg{
+/* .search_result svg{
 
-}
+} */
 
 .search_result:hover .us_logo img{
 	height: 30px;
