@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, redirect, flash, request, session,
 from db_manager import get_session
 from datetime import datetime
 from classes.users import Users
-import hash
 
 
 auth_bp = Blueprint('auth', __name__)
@@ -19,20 +18,20 @@ def login():
 			user = SQLsession.query(Users).filter_by(login=login).first()
 			if not user:
 				flash('Неправильный логин или пароль. Пожалуйста, попробуйте снова.', 'error')
+				print('Пользователь', login, 'не существует')
 				return redirect('/login')
 
-			user.password_hash = hash.convert_from_db_format(user.password_hash)
-			is_password_valid = hash.verify_password(password, user.password_hash)
-			print("Is Password Valid:", is_password_valid)
 			# Успешный вход, устанавливаем пользователя в сессию
-			if is_password_valid:
+			if user and user.is_password_valid(password):
 				session['user_id'] = user.user_id
 				flash('Вы успешно вошли в систему!', 'success')
+				print('Пользователь', user.login, 'вошел в систему')
 				return redirect('/')
 
 			# Неправильный логин или пароль, выводим сообщение об ошибке
 			else:
 				flash('Неправильный логин или пароль. Пожалуйста, попробуйте снова.', 'error')
+				print('Пользователь', user.login, 'ввел неправильный пароль')
 				return redirect('/login')
 
 	# При ошибке или если пользователь не вошел, возвращаемся на страницу входа
@@ -58,26 +57,20 @@ def check_login_availability():
 def register():
 	if request.method == 'POST':
 		login = request.form['login']
-		password = request.form['password']
-		# Хэшируем пароль
-		print('password', password)
-		password_hash = hash.hash_password(password)
-		print('password_hash', password_hash)
-		is_password_valid = hash.verify_password(password, password_hash)
-		print("Is Password Valid:", is_password_valid)
-		db_hash = hash.convert_to_db_format(password_hash)
-		print('db_hash', db_hash)
-		email = request.form['email']
-		name = request.form['name']
-		surname = request.form['surname']
+
 		# Проверяем, существует ли пользователь с таким логином
 		with Session as SQLsession:
 			existing_user = SQLsession.query(Users).filter_by(login=login).first()
 			if existing_user:
 				return jsonify({'error': 'Пользователь с таким логином уже существует'})
-
+		
+		password = request.form['password']
+		email = request.form['email']
+		name = request.form['name']
+		surname = request.form['surname']
 		with Session as SQLsession:
-			new_user = Users(login=login, password_hash=db_hash, created_at=datetime.now(), email=email, name=name, surname=surname)
+			new_user = Users(login=login, password_hash=password, created_at=datetime.now(), email=email, name=name, surname=surname)
+			new_user.set_password_hash_from_password(password)
 			SQLsession.add(new_user)
 			SQLsession.commit()
 			user = SQLsession.query(Users).filter_by(login=login).first()
