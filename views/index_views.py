@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, session
-from db_manager import get_session
+from utils.db_manager import get_session
 from classes.users import Users
 
 

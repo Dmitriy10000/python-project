@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, flash, request, session, jsonify
-from db_manager import get_session
+from utils.db_manager import get_session
 from datetime import datetime
 from classes.users import Users
 

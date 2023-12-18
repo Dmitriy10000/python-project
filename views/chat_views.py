@@ -1,5 +1,5 @@
 from flask import Blueprint, session, render_template, redirect
-from db_manager import get_session
+from utils.db_manager import get_session
 from classes.users import Users
 from classes.friends import Friends
 from classes.chats import Chats

@@ -11,7 +11,7 @@
 
 
 from flask import Flask
-from db_manager import create_database_tables, get_session
+from utils.db_manager import create_database_tables, get_session
 from views.auth_views import auth_bp
 from views.index_views import index_bp
 from views.add_friend_views import add_friend_bp
