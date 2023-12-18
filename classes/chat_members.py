@@ -1,6 +1,6 @@
 # chat_members.py
 from sqlalchemy import Column, Integer, Date, Boolean
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 # darova dima eto Ivan

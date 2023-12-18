@@ -4,9 +4,33 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Login</title>
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
+	<link rel='stylesheet' href='https://unicons.iconscout.com/release/v2.1.9/css/unicons.css'>
+	<link rel="stylesheet" href="static/css/index.css">
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('#login').on('input', function() {
+				var login = $(this).val();
+	
+				$.ajax({
+					type: 'POST',
+					url: '/check_login_availability',
+					data: {'login': login},
+					success: function(response) {
+						if (response.available) {
+							$('#loginAvailability').text('Логин свободен');
+						} else {
+							$('#loginAvailability').text('Логин занят');
+						}
+					}
+				});
+			});
+		});
+	</script>
 </head>
-<body>
-	<p><a href="{{ url_for('home') }}">Back to Home</a></p>
+<!-- <body>
+	<p><a href="/">Back to Home</a></p>
 	<h1>Login</h1>
 	{% with messages = get_flashed_messages(with_categories=true) %}
 		{% if messages %}
@@ -22,5 +46,80 @@
 		<input type="password" name="password" required><br>
 		<button type="submit">Login</button>
 	</form>
-</body>
+</body> -->
+<body>
+	<!-- partial:index.partial.html -->
+	<div class="section">
+			<div class="container">
+				<div class="row full-height justify-content-center">
+					<div class="col-12 text-center align-self-center py-5">
+						<div class="section pb-5 pt-5 pt-sm-2 text-center">
+							<h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
+							  <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
+							  <label for="reg-log"></label>
+							<div class="card-3d-wrap mx-auto">
+								<div class="card-3d-wrapper">
+									<div class="card-front">
+										<div class="center-wrap">
+											<div class="section text-center">
+												<h4 class="mb-4 pb-3">Log In</h4>
+												<form action="/login" method="post">
+												<div class="form-group">
+													<input type="text"  name="login" class="form-style" placeholder="Your login" id="login" autocomplete="off">
+													<i class="input-icon uil-user"></i>
+												</div>	
+												<div class="form-group mt-2">
+													<input type="password" name="password" class="form-style" placeholder="Your Password" id="password" autocomplete="off">
+													<i class="input-icon uil uil-lock-alt"></i>
+												</div>
+												<!-- <a href="#" class="btn mt-4">submit</a> -->
+												<button type="submit" class="btn mt-4">Login</button>
+											</form>
+											  </div>
+										  </div>
+									  </div>
+									<div class="card-back">
+										<div class="center-wrap">
+											<div class="section text-center">
+												<h4 class="mb-4 pb-3">Sign Up</h4>
+												<form action="/register" method="post">
+												<div class="form-group mt-2">
+													
+													<input type="text" name="login" class="form-style" placeholder="Your login" id="login" required autocomplete="off">
+													<i class="input-icon uil uil-user"></i>
+													<span id="loginAvailability"></span>
+												</div>	
+												<div class="form-group mt-2">
+													<input type="password" name="password" class="form-style" placeholder="Your Password" id="password" required autocomplete="off">
+													<i class="input-icon uil uil-lock-alt"></i>
+												</div>
+												<div class="form-group mt-2">
+													<input type="email" name="email" class="form-style" placeholder="Your Email" id="email" required autocomplete="off">
+													<i class="input-icon uil uil-at"></i>
+												</div>	
+												<div class="form-group mt-2">
+													<input type="text" name="name" class="form-style" placeholder="Your Name" id="name" required autocomplete="off">
+													<i class="input-icon uil-user-square"></i>					
+												</div>
+												<div class="form-group mt-2">
+													<input type="text" name="surname" class="form-style" placeholder="Your Surname" id="surname" required autocomplete="off">
+													<i class="input-icon uil uil-lock-alt"></i>
+												</div>
+												</div>
+												<!-- <a href="#" class="btn mt-4">submit</a> -->
+												<button type="submit" class="btn mt-4">Create User</button>
+												</form>
+											  </div>
+										  </div>
+									  </div>
+								  </div>
+							  </div>
+						  </div>
+					  </div>
+				  </div>
+			</div>
+		</div>
+	<!-- partial -->
+	  
+	</body>
 </html>
