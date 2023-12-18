@@ -22,4 +22,4 @@ def get_logged_in_user():
 @index_bp.route('/')
 def home():
 	user = get_logged_in_user()
-	return render_template('index.html', user=user)
+	return render_template('login.html', user=user)
