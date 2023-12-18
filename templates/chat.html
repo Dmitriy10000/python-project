@@ -80,20 +80,24 @@
 								<img src="static/icons/us_logo.png" alt="">
 							</div>
 							<div>${user.name} ${user.surname}</div>
-							<div class="buttons">
 						`;
+						// Создаем элемент <div class="buttons">
+						var buttonsContainer = document.createElement('div');
+						buttonsContainer.classList.add('buttons');
+
 						if (user.is_friend == false) {
-							listItem.innerHTML += `<button id="add ${user.user_id}" class="add" onclick="addToFriendList(${user.user_id})">Add to friend list</button>`;
+							buttonsContainer.innerHTML += `<button id="add ${user.user_id}" class="add" onclick="addToFriendList(${user.user_id})">Add to friend list</button>`;
+						} else if (user.is_invite_sent == true) {
+							buttonsContainer.innerHTML += `<button id="cancel ${user.user_id}" class="cancel_request" onclick="cancelRequest(${user.user_id})">Cancel request</button>`;
+						} else if (user.is_invite_received == true) {
+							buttonsContainer.innerHTML += `<button id="accept ${user.user_id}" class="accept_request" onclick="acceptRequest(${user.user_id})">Accept request</button>`;
+							buttonsContainer.innerHTML += `<button id="decline ${user.user_id}" class="decline_request" onclick="declineRequest(${user.user_id})">Decline request</button>`;
 						}
-						else if (user.is_invite_sent == true) {
-							listItem.innerHTML += `<button id="cancel ${user.user_id}" class="cancel_request" onclick="cancelRequest(${user.user_id})">Cancel request</button>`;
-						}
-						else if (user.is_invite_received == true) {
-							listItem.innerHTML += `<button id="accept ${user.user_id}" class="accept_request" onclick="acceptRequest(${user.user_id})">Accept request</button>`;
-							listItem.innerHTML += `<button id="decline ${user.user_id}" class="decline_request" onclick="declineRequest(${user.user_id})">Decline request</button>`;
-						}
-						listItem.innerHTML += `<button id="pm ${user.user_id}" class="pm" onclick="personalMessage(${user.user_id})">Personal message</button>`;
-						listItem.innerHTML += `</div>`;
+						buttonsContainer.innerHTML += `<button id="pm ${user.user_id}" class="pm" onclick="personalMessage(${user.user_id})">Personal message</button>`;
+						// Добавляем <div class="buttons"> внутрь <div class="search_result">
+						listItem.appendChild(buttonsContainer);
+
+						// Добавляем <div class="search_result"> в ваш контейнер результатов
 						resultsContainer.appendChild(listItem);
 					});
 				})
