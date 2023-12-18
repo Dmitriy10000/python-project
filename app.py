@@ -56,21 +56,26 @@ user_in_socket = {}
 @socketio.on('message')
 def handle_message(msg):
 	print(request.sid)
-	# Получаем данные пользователя
+	# Получаем данные текущего пользователя
 	user_id = session.get('user_id')
 	with Session as SQLSession:
 		user = SQLSession.query(Users).filter(Users.user_id == user_id).first()
-		need_chat_id = user_in_chat[user.user_id]
+		need_chat_id = user_in_chat[user_id]
 		
 		# debug
 		print('aboboaobaobaobaoboa', user_in_chat)
-		print('Входящее сообщение от пользователя с id', user.user_id, 'содержание:', msg)
+		print('Входящее сообщение от пользователя с id', user_id, 'содержание:', msg)
 		
 		# Записываем сообщение в бд
 		try:
-			message = Messages(user_id=user.user_id, chat_id=user_in_chat[user.user_id], content=msg['message'], timestamp=datetime.now())
+			tmp_time = datetime.now()
+			message = Messages(user_id=user_id, chat_id=user_in_chat[user_id], content=msg['message'], timestamp=tmp_time)
 			SQLSession.add(message)
 			SQLSession.commit()
+
+			# Получаем id сообщения
+			with Session as SQLSession:
+				temp_message = SQLSession.query(Messages).filter(Messages.user_id == user_id).filter(Messages.timestamp == tmp_time).first()
 		except Exception as e:
 			print('Ошибка при записи сообщения в бд', e)
 
@@ -89,14 +94,14 @@ def handle_message(msg):
 			with Session as SQLSession:
 				user = SQLSession.query(Users).filter(Users.user_id == user_id).first()
 
+
 			# Пакуем сообщение в json
 			data = {
-				'user_id': user.user_id,
-				'target_id': user_id,
-				'chat_id': need_chat_id,
-				'chat_name': user.name + ' ' + user.surname,
-				'timestamp': datetime.now().strftime("%d.%m.%Y %H:%M:%S"),
-				'message': msg,
+				'sender_id': user_id,
+				'user_name': user.name + ' ' + user.surname,
+				'message_id': temp_message.message_id,
+				'content': temp_message.content,
+				'timestamp': temp_message.timestamp.strftime("%d.%m.%Y %H:%M:%S"),
 			}
 
 			# Отправляем сообщение

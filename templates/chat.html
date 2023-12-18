@@ -217,6 +217,7 @@
 
 		// Открытие личного чата с пользователем
 		var current_chat_id = 0;
+		var current_user_id = 0;
 		function personalMessages(user_id, from, to) {
 			if (from == undefined) {
 				from = 0;
@@ -259,28 +260,21 @@
 				// 	</div>
 				// </div>
 				data.messages.forEach(message => {
+					current_user_id = data.user_id;
+					
 					// Выводим сообщения в чат
-					// Создаем <div class="message">
 					var messageContainer = document.createElement('div');
 					messageContainer.classList.add('message');
 					messageContainer.setAttribute('id', message.message_id);
-
-					// Создаем <div class="us_logo">
 					var usLogo = document.createElement('div');
 					usLogo.classList.add('us_logo');
-					// Создаем <img src="static/icons/us_logo.png" alt=""></img>
 					var usLogoImg = document.createElement('img');
 					usLogoImg.setAttribute('src', 'static/icons/us_logo.png');
 					usLogoImg.setAttribute('alt', '');
-					// Добавляем <img src="static/icons/us_logo.png" alt=""></img> внутрь <div class="us_logo">
 					usLogo.appendChild(usLogoImg);
-					// Добавляем <div class="us_logo"> внутрь <div class="message">
 					messageContainer.appendChild(usLogo);
-
-					// Создаем <div class="message_info">
 					var messageInfo = document.createElement('div');
 					messageInfo.classList.add('message_info');
-					// Создаем <div class="name">Name Surname</div>
 					var name = document.createElement('div');
 					name.classList.add('name');
 					if (message.user_id == data.target_id) {
@@ -288,18 +282,12 @@
 					} else {
 						name.innerHTML = data.user_name;
 					}
-					// Создаем <div class="message_content">text</div>
 					var messageContent = document.createElement('div');
 					messageContent.classList.add('message_content');
 					messageContent.innerHTML = message.content;
-					// Добавляем <div class="name">Name Surname</div> внутрь <div class="message_info">
 					messageInfo.appendChild(name);
-					// Добавляем <div class="message_content">Hello world!</div> внутрь <div class="message_info">
 					messageInfo.appendChild(messageContent);
-					// Добавляем <div class="message_info"> внутрь <div class="message">
 					messageContainer.appendChild(messageInfo);
-
-					// Добавляем <div class="message"> внутрь <div id="chat_content">
 					document.getElementById('chat_content').appendChild(messageContainer);
 				});
 			})
@@ -313,7 +301,7 @@
 			// Выводим сообщение в чат
 			var messageContainer = document.createElement('div');
 			messageContainer.classList.add('message');
-			messageContainer.setAttribute('id', msg.messages[0].message_id);
+			messageContainer.setAttribute('id', msg.message_id);
 			var usLogo = document.createElement('div');
 			usLogo.classList.add('us_logo');
 			var usLogoImg = document.createElement('img');
@@ -325,14 +313,16 @@
 			messageInfo.classList.add('message_info');
 			var name = document.createElement('div');
 			name.classList.add('name');
-			if (msg.messages[0].user_id == msg.target_id) {
-				name.innerHTML = msg.chat_name;
-			} else {
+			console.log(current_user_id);
+			if (msg.user_id == current_user_id) {
 				name.innerHTML = msg.user_name;
+			}
+			else {
+				name.innerHTML = msg.chat_name;
 			}
 			var messageContent = document.createElement('div');
 			messageContent.classList.add('message_content');
-			messageContent.innerHTML = msg.messages[0].content;
+			messageContent.innerHTML = msg.content;
 			messageInfo.appendChild(name);
 			messageInfo.appendChild(messageContent);
 			messageContainer.appendChild(messageInfo);
