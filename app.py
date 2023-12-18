@@ -81,13 +81,13 @@ def handle_message(msg):
 
 		# Отправляем сообщение всем участникам чата, которые находятся во вкладке чата, совпадающей с чатом, в котором было отправлено сообщение
 		print('user_in_chat', user_in_chat)
-		for user_id in user_in_chat:
-			print('user_id', user_id)
+		for usr_id in user_in_chat:
+			print('user_id', usr_id)
 			print('need_chat_id', need_chat_id)
-			print('user_in_chat[user_id]', user_in_chat[user_id])
+			print('user_in_chat[user_id]', user_in_chat[usr_id])
 
 			# Пропускаем пользователей, которые не находятся во вкладке чата, совпадающей с чатом, в котором было отправлено сообщение
-			if user_in_chat[user_id] != need_chat_id:
+			if user_in_chat[usr_id] != need_chat_id:
 				continue
 			
 			# Получаем имя и фамилию пользователя, который отправил сообщение
@@ -97,7 +97,7 @@ def handle_message(msg):
 
 			# Пакуем сообщение в json
 			data = {
-				'sender_id': user_id,
+				'user_id': user_id,
 				'user_name': user.name + ' ' + user.surname,
 				'message_id': temp_message.message_id,
 				'content': temp_message.content,
@@ -105,8 +105,8 @@ def handle_message(msg):
 			}
 
 			# Отправляем сообщение
-			print('Отправляем сообщение', data, 'в комнату', user_in_socket[user_id])
-			emit('message', data, room=user_in_socket[user_id])
+			print('Отправляем сообщение', data, 'в комнату', user_in_socket[usr_id])
+			emit('message', data, room=user_in_socket[usr_id])
 				
 
 # Инициализируем сокеты

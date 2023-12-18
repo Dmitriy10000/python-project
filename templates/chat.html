@@ -236,6 +236,7 @@
 		// Открытие личного чата с пользователем
 		var current_chat_id = 0;
 		var current_user_id = 0;
+		var chat_name = '';
 		function personalMessages(user_id, from, to) {
 			if (from == undefined) {
 				from = 0;
@@ -261,6 +262,7 @@
 
 				// Меняем название чата
 				document.getElementById('chat_name').innerHTML = data.chat_name;
+				chat_name = data.chat_name;
 
 				// Очищаем предыдущие сообщения
 				document.getElementById('chat_content').innerHTML = '';
@@ -297,7 +299,8 @@
 					name.classList.add('name');
 					if (message.user_id == data.target_id) {
 						name.innerHTML = data.chat_name;
-					} else {
+					}
+					else {
 						name.innerHTML = data.user_name;
 					}
 					var messageContent = document.createElement('div');
@@ -336,7 +339,7 @@
 				name.innerHTML = msg.user_name;
 			}
 			else {
-				name.innerHTML = msg.chat_name;
+				name.innerHTML = chat_name;
 			}
 			var messageContent = document.createElement('div');
 			messageContent.classList.add('message_content');
