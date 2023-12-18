@@ -22,6 +22,56 @@ svg,g,g{
 .shell{
 	display: flex;
 }
+.sections{
+	height: 10vh;
+	display: flex;
+	justify-content: start;
+	border:var(--border);
+}
+.btn_for_sf, .btn_for_sf svg path{
+	color:grey;
+	display: flex;
+	justify-content:space-between;
+	border-radius:8px;
+	padding:5px;
+	margin: 10px;
+	font-weight: 700;
+	padding-top: 12px;
+	margin-right: 10px;
+	font-size: 13px;
+	letter-spacing: 2px;
+	fill: grey;
+	border:none;
+	transition-duration: 0.5s;
+}
+.Section_friends{
+	/* FRIENDS */
+	/* display: none; */
+	
+	height: 90vh;
+	width: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: var(--main_bg);
+	overflow: hidden;
+	transition: 0.5s;
+	transition: width 1s;
+	margin-top: 20vh;
+	border-radius:10px
+	
+
+}
+.Section_friends.ON{
+	width: 62vh;
+}
+
+
+.active, .active svg path{
+	color:rgb(255, 255, 255);
+	background-color:#4BD295;
+	fill: white;
+}
 .sidebar{
 
 	margin-left: 0;
@@ -120,9 +170,7 @@ input[type=text]:hover{
 	width: 100%;
 	background-color: #2E3748;
 	border-bottom: var(--border);
-	display: flex;
-	justify-content: center;
-    align-items: center;
+
 }
 .chat_content {
 	flex-grow: 1;
