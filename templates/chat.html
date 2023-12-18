@@ -13,9 +13,13 @@
 			<div class="sidebar">
 				<div class="logo_shell">
 					<div class="logo"><a href="#">CHATTY</a></div>
+					<div class="logo_buttons">
+					<div class="quit_icon"><?xml version="1.0" ?><a href="/login"><svg width="2em" height="2em" viewBox="0 0 7.41 7.41" id="svg8" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" stroke="#000000" transform="matrix(-1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"> <defs id="defs2"/> <g id="layer1" transform="translate(-1.0498858,-289.06249)"> <path d="m 13,2 c -0.549215,0.0022 -0.993898,0.4468784 -0.996094,0.9960938 l -0.0078,9.0058592 c -0.03025,1.363243 2.030246,1.363243 2,0 V 4 H 28 V 28 H 13.996094 v -6.998047 c 0.03025,-1.363243 -2.030246,-1.363243 -2,0 l 0.0078,8.001953 C 12.006102,29.553121 12.450785,29.997804 13,30 H 29.003906 C 29.553121,29.997804 29.997804,29.553121 30,29.003906 V 2.9960938 C 29.997804,2.4468784 29.553121,2.0021956 29.003906,2 Z m 4.294922,8.710938 3.228516,3.228515 C 13.412685,14.302836 7.1629325,17.116409 4.0742188,23.628906 3.4930021,24.899132 5.4668482,25.693662 5.9277344,24.375 9.0201066,18.833557 15.506455,15.838467 20.908203,15.941406 l -3.679687,4.417969 c -0.855468,1.024739 0.681641,2.307942 1.537109,1.283203 l 5.003906,-6 c 0.334361,-0.397396 0.308905,-0.984593 -0.05859,-1.351562 L 18.705078,9.2929688 C 17.634144,8.2220353 16.259967,9.6759829 17.294922,10.710938 Z" id="icon-1" style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill-opacity:1;fill-rule:nonzero;stroke-width:0.000074083335;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" transform="matrix(0.26458333,0,0,0.26458333,0,288.53332)"/> </g> </g></svg></a></div>
 					<div class="us_logo">
 						<img src="static/icons/us_logo.png" alt="">
 					</div>
+				</div>
+					
 				</div>
 				<div class="search_in_chat">
 					<input type="text" name="search" id="globalSearchInput" oninput="globalSearch()" placeholder="Search for users and groups" autocomplete="off">
@@ -76,13 +80,13 @@
 						listItem.classList.add('search_result');
 						listItem.innerHTML = `
 							<div class="us_logo">
-								<img src="static/icons/us_logo.png" alt="">
+								<img src="static/icons/us_logo.png" alt=""></img>
 							</div>
 							<div class="us_name">${user.name} ${user.surname}</div>
 						`;
 						var buttonsContainer = document.createElement('div');
 						buttonsContainer.classList.add('buttons');
-						buttonsContainer.innerHTML += `<button id="pm ${user.user_id}" class="pm" onclick="personalMessage(${user.user_id})"><svg class="pm_icon" width="2em" height="2em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.7994 18.3704L23.8013 18.373C24.1307 18.8032 24.2888 20.2316 22.0258 19.9779C21.3596 19.9033 20.4282 19.7715 19.3088 19.3471C18.5551 19.0613 17.8986 18.7026 17.3584 18.3522C16.4699 18.7098 15.5118 18.9296 14.5113 18.9857C13.1436 20.8155 10.9602 22 8.50001 22C7.69152 22 6.91135 21.8717 6.17973 21.6339C5.74016 21.8891 5.24034 22.1376 4.68789 22.3471C3.56851 22.7715 2.63949 22.9297 1.97092 22.9779C1.47028 23.014 1.11823 22.9883 0.944098 22.9681C0.562441 22.9239 0.219524 22.7064 0.072134 22.3397C-0.0571899 22.0179 -0.0104055 21.6519 0.195537 21.3728C0.448192 21.0283 0.680439 20.6673 0.899972 20.3011C1.32809 19.5868 1.74792 18.8167 1.85418 17.9789C1.30848 16.9383 1.00001 15.7539 1.00001 14.5C1.00001 11.5058 2.75456 8.92147 5.29159 7.71896C6.30144 3.85296 9.81755 1 14 1C18.9706 1 23 5.02944 23 10C23 11.3736 22.6916 12.6778 22.1395 13.8448C21.9492 15.5687 22.8157 17.0204 23.7994 18.3704ZM7.00001 10C7.00001 6.13401 10.134 3 14 3C17.866 3 21 6.13401 21 10C21 11.1198 20.7378 12.1756 20.2723 13.1118C20.2242 13.2085 20.1921 13.3124 20.1772 13.4194C19.9584 14.9943 20.3278 16.43 21.0822 17.8083C19.9902 17.5451 18.9611 17.0631 18.0522 16.4035C17.7546 16.1875 17.3625 16.1523 17.0312 16.3117C16.1152 16.7525 15.0879 17 14 17C10.134 17 7.00001 13.866 7.00001 10ZM5.00353 10.2543C5.11889 14.4129 8.05529 17.8664 11.9674 18.7695C11.0213 19.5389 9.8145 20 8.50001 20C7.7707 20 7.07689 19.8586 6.44271 19.6026C6.14147 19.481 5.79993 19.5133 5.52684 19.6892C5.08797 19.972 4.56616 20.2543 3.9788 20.477C3.58892 20.6248 3.23263 20.7316 2.91446 20.8083C3.24678 20.2012 3.58332 19.4779 3.73844 18.7971C3.81503 18.461 3.8572 18.1339 3.87625 17.8266C3.88848 17.6293 3.84192 17.4327 3.74245 17.2618C3.27058 16.451 3.00001 15.5086 3.00001 14.5C3.00001 12.7904 3.78 11.263 5.00353 10.2543Z"/></svg></button></div>`;
+						buttonsContainer.innerHTML += `<button id="pm ${user.user_id}" class="pm" onclick="personalMessages(${user.user_id})"><svg class="pm_icon" width="2em" height="2em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.7994 18.3704L23.8013 18.373C24.1307 18.8032 24.2888 20.2316 22.0258 19.9779C21.3596 19.9033 20.4282 19.7715 19.3088 19.3471C18.5551 19.0613 17.8986 18.7026 17.3584 18.3522C16.4699 18.7098 15.5118 18.9296 14.5113 18.9857C13.1436 20.8155 10.9602 22 8.50001 22C7.69152 22 6.91135 21.8717 6.17973 21.6339C5.74016 21.8891 5.24034 22.1376 4.68789 22.3471C3.56851 22.7715 2.63949 22.9297 1.97092 22.9779C1.47028 23.014 1.11823 22.9883 0.944098 22.9681C0.562441 22.9239 0.219524 22.7064 0.072134 22.3397C-0.0571899 22.0179 -0.0104055 21.6519 0.195537 21.3728C0.448192 21.0283 0.680439 20.6673 0.899972 20.3011C1.32809 19.5868 1.74792 18.8167 1.85418 17.9789C1.30848 16.9383 1.00001 15.7539 1.00001 14.5C1.00001 11.5058 2.75456 8.92147 5.29159 7.71896C6.30144 3.85296 9.81755 1 14 1C18.9706 1 23 5.02944 23 10C23 11.3736 22.6916 12.6778 22.1395 13.8448C21.9492 15.5687 22.8157 17.0204 23.7994 18.3704ZM7.00001 10C7.00001 6.13401 10.134 3 14 3C17.866 3 21 6.13401 21 10C21 11.1198 20.7378 12.1756 20.2723 13.1118C20.2242 13.2085 20.1921 13.3124 20.1772 13.4194C19.9584 14.9943 20.3278 16.43 21.0822 17.8083C19.9902 17.5451 18.9611 17.0631 18.0522 16.4035C17.7546 16.1875 17.3625 16.1523 17.0312 16.3117C16.1152 16.7525 15.0879 17 14 17C10.134 17 7.00001 13.866 7.00001 10ZM5.00353 10.2543C5.11889 14.4129 8.05529 17.8664 11.9674 18.7695C11.0213 19.5389 9.8145 20 8.50001 20C7.7707 20 7.07689 19.8586 6.44271 19.6026C6.14147 19.481 5.79993 19.5133 5.52684 19.6892C5.08797 19.972 4.56616 20.2543 3.9788 20.477C3.58892 20.6248 3.23263 20.7316 2.91446 20.8083C3.24678 20.2012 3.58332 19.4779 3.73844 18.7971C3.81503 18.461 3.8572 18.1339 3.87625 17.8266C3.88848 17.6293 3.84192 17.4327 3.74245 17.2618C3.27058 16.451 3.00001 15.5086 3.00001 14.5C3.00001 12.7904 3.78 11.263 5.00353 10.2543Z"/></svg></button></div>`;
 						if (user.is_friend == false) {
 							buttonsContainer.innerHTML += `<button id="add ${user.user_id}" class="add" onclick="addToFriendList(${user.user_id})"><svg class="icon" width="2em" height="2em" viewBox="0 0 1000 1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  enable-background="new 0 0 1000 1000" xml:space="preserve"><g><g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"><path d="M2704.2,4987.1c-34.5-34.5-36.4-57.4-28.7-245.1c24.9-505.5,34.5-988,23-1020.6c-24.9-68.9-95.7-65.1-245.1,9.6c-130.2,65.1-139.8,67-183.8,38.3c-24.9-15.3-46-46-46-67c0-21.1,53.6-281.5,118.7-580.2l118.7-540l11.5-651l11.5-651l90-268.1c162.8-478.7,344.7-781.2,633.8-1058.9c86.2-82.4,222.1-191.5,304.4-243.2l149.4-93.8l-13.4-97.6c-5.7-51.7-15.3-101.5-19.1-107.2c-3.8-7.6-134-17.2-289.1-23c-162.7-5.8-327.4-23-388.7-40.2c-162.8-45.9-361.9-155.1-484.4-266.1c-151.3-137.9-1106.7-1401.6-1192.9-1577.8c-97.7-199.1-122.5-365.7-122.5-802.3c0-430.8,24.9-597.4,124.5-802.3c74.7-155.1,183.8-293,321.7-405.9c99.6-82.3,291-187.6,382.9-208.7l51.7-11.5v407.8c0,226,9.6,442.3,19.2,480.6c24.9,88.1,126.4,178.1,218.3,195.3c107.2,21.1,227.8-44.1,277.6-149.4c36.4-74.7,40.2-114.9,40.2-534.2V-4780h1876.4h1876.4v474.9c0,434.6,3.8,478.7,38.3,534.2c74.7,124.5,201,162.8,333.2,103.4c158.9-68.9,164.7-91.9,164.7-637.6V-4780l63.2,11.5c285.3,49.8,520.8,170.4,704.6,365.7c147.4,157,208.7,256.6,279.6,457.6c53.6,149.4,53.6,155.1,53.6,630c0,409.8-5.7,494-34.5,591.7c-51.7,164.7-132.1,314-243.2,453.8l-97.6,120.6l-329.4,1.9c-298.7,1.9-344.6,7.6-497.8,53.6c-698.9,214.5-1166.1,723.8-1319.3,1439.9c-40.2,189.6-28.7,562.9,21.1,765.9c49.8,195.3,155.1,432.7,264.2,597.4c164.7,248.9,497.8,536.1,752.5,647.2c47.9,21.1,91.9,46,99.6,57.4c7.6,9.6,15.3,394.4,13.4,852.1c0,917.2-9.6,1041.6-109.1,1250.3c-151.3,323.6-419.3,545.7-760.2,635.7c-91.9,23-250.8,28.7-871.2,30.6h-756.3l-170.4,220.2c-93.8,120.6-189.6,233.6-214.5,248.9c-57.4,38.3-113,9.6-151.3-78.5c-24.9-63.2-51.7-78.5-122.5-67c-15.3,1.9-122.5,82.3-239.3,180C2771.2,5052.2,2769.3,5052.2,2704.2,4987.1z"/><path d="M7154.1,1209.3c-93.8-34.5-160.8-90-206.8-174.2c-40.2-76.6-42.1-107.2-47.9-553.4l-7.7-472.9L6409.2,3c-474.8-5.7-484.4-5.7-551.4-51.7C5608.9-221,5645.3-575.2,5922.9-692c57.4-23,158.9-28.7,520.8-28.7h448l7.7-472.9c5.7-517,9.6-534.2,124.5-639.5c80.4-76.6,126.4-93.8,239.3-93.8c124.5,0,212.5,42.1,291.1,139.8l59.3,74.7l5.7,495.9l5.7,495.9h459.5c490.2,0,545.7,9.6,647.2,101.5c61.3,57.4,116.8,180,116.8,262.3c0,134-113,296.8-235.5,342.7c-32.6,13.4-237.4,21.1-520.8,21.1h-467.2l-5.7,494c-5.7,492.1-5.7,495.9-53.6,564.9c-55.5,82.3-208.7,166.6-294.9,164.7C7238.3,1230.4,7186.6,1220.8,7154.1,1209.3z"/></g></g></svg></button>`;
 						
@@ -124,8 +128,7 @@
 				if (data.success != '') {
 					// Меняем текст, класс и id кнопки на "Cancel request"
 					document.getElementById(`add ${user_id}`).innerHTML = '<svg width="25px" height="25px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M704 288h-281.6l177.6-202.88a32 32 0 0 0-48.32-42.24l-224 256a30.08 30.08 0 0 0-2.24 3.84 32 32 0 0 0-2.88 4.16v1.92a32 32 0 0 0 0 5.12A32 32 0 0 0 320 320a32 32 0 0 0 0 4.8 32 32 0 0 0 0 5.12v1.92a32 32 0 0 0 2.88 4.16 30.08 30.08 0 0 0 2.24 3.84l224 256a32 32 0 1 0 48.32-42.24L422.4 352H704a224 224 0 0 1 224 224v128a224 224 0 0 1-224 224H320a232 232 0 0 1-28.16-1.6 32 32 0 0 0-35.84 27.84 32 32 0 0 0 27.84 35.52A295.04 295.04 0 0 0 320 992h384a288 288 0 0 0 288-288v-128a288 288 0 0 0-288-288zM103.04 760a32 32 0 0 0-62.08 16A289.92 289.92 0 0 0 140.16 928a32 32 0 0 0 40-49.92 225.6 225.6 0 0 1-77.12-118.08zM64 672a32 32 0 0 0 22.72-9.28 37.12 37.12 0 0 0 6.72-10.56A32 32 0 0 0 96 640a33.6 33.6 0 0 0-9.28-22.72 32 32 0 0 0-10.56-6.72 32 32 0 0 0-34.88 6.72A32 32 0 0 0 32 640a32 32 0 0 0 2.56 12.16 37.12 37.12 0 0 0 6.72 10.56A32 32 0 0 0 64 672z" /></svg>';
-					document.getElementById(`add ${user_id}`).classList.remove('add');
-					document.getElementById(`add ${user_id}`).classList.add('cancel_request');
+					document.getElementById(`add ${user_id}`).setAttribute('class','cancel_request');
 					document.getElementById(`add ${user_id}`).setAttribute('onclick', `cancelRequest(${user_id})`);
 					document.getElementById(`add ${user_id}`).setAttribute('id', `cancel ${user_id}`);
 				}
@@ -133,7 +136,6 @@
 		}
 
 		// Отправляем AJAX-запрос на отмену запроса на добавление пользователя в друзья
-		var my_svg_cancel = '<svg class="icon" width="2em" height="2em" viewBox="0 0 1000 1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  enable-background="new 0 0 1000 1000" xml:space="preserve"><g><g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"><path d="M2704.2,4987.1c-34.5-34.5-36.4-57.4-28.7-245.1c24.9-505.5,34.5-988,23-1020.6c-24.9-68.9-95.7-65.1-245.1,9.6c-130.2,65.1-139.8,67-183.8,38.3c-24.9-15.3-46-46-46-67c0-21.1,53.6-281.5,118.7-580.2l118.7-540l11.5-651l11.5-651l90-268.1c162.8-478.7,344.7-781.2,633.8-1058.9c86.2-82.4,222.1-191.5,304.4-243.2l149.4-93.8l-13.4-97.6c-5.7-51.7-15.3-101.5-19.1-107.2c-3.8-7.6-134-17.2-289.1-23c-162.7-5.8-327.4-23-388.7-40.2c-162.8-45.9-361.9-155.1-484.4-266.1c-151.3-137.9-1106.7-1401.6-1192.9-1577.8c-97.7-199.1-122.5-365.7-122.5-802.3c0-430.8,24.9-597.4,124.5-802.3c74.7-155.1,183.8-293,321.7-405.9c99.6-82.3,291-187.6,382.9-208.7l51.7-11.5v407.8c0,226,9.6,442.3,19.2,480.6c24.9,88.1,126.4,178.1,218.3,195.3c107.2,21.1,227.8-44.1,277.6-149.4c36.4-74.7,40.2-114.9,40.2-534.2V-4780h1876.4h1876.4v474.9c0,434.6,3.8,478.7,38.3,534.2c74.7,124.5,201,162.8,333.2,103.4c158.9-68.9,164.7-91.9,164.7-637.6V-4780l63.2,11.5c285.3,49.8,520.8,170.4,704.6,365.7c147.4,157,208.7,256.6,279.6,457.6c53.6,149.4,53.6,155.1,53.6,630c0,409.8-5.7,494-34.5,591.7c-51.7,164.7-132.1,314-243.2,453.8l-97.6,120.6l-329.4,1.9c-298.7,1.9-344.6,7.6-497.8,53.6c-698.9,214.5-1166.1,723.8-1319.3,1439.9c-40.2,189.6-28.7,562.9,21.1,765.9c49.8,195.3,155.1,432.7,264.2,597.4c164.7,248.9,497.8,536.1,752.5,647.2c47.9,21.1,91.9,46,99.6,57.4c7.6,9.6,15.3,394.4,13.4,852.1c0,917.2-9.6,1041.6-109.1,1250.3c-151.3,323.6-419.3,545.7-760.2,635.7c-91.9,23-250.8,28.7-871.2,30.6h-756.3l-170.4,220.2c-93.8,120.6-189.6,233.6-214.5,248.9c-57.4,38.3-113,9.6-151.3-78.5c-24.9-63.2-51.7-78.5-122.5-67c-15.3,1.9-122.5,82.3-239.3,180C2771.2,5052.2,2769.3,5052.2,2704.2,4987.1z"/><path d="M7154.1,1209.3c-93.8-34.5-160.8-90-206.8-174.2c-40.2-76.6-42.1-107.2-47.9-553.4l-7.7-472.9L6409.2,3c-474.8-5.7-484.4-5.7-551.4-51.7C5608.9-221,5645.3-575.2,5922.9-692c57.4-23,158.9-28.7,520.8-28.7h448l7.7-472.9c5.7-517,9.6-534.2,124.5-639.5c80.4-76.6,126.4-93.8,239.3-93.8c124.5,0,212.5,42.1,291.1,139.8l59.3,74.7l5.7,495.9l5.7,495.9h459.5c490.2,0,545.7,9.6,647.2,101.5c61.3,57.4,116.8,180,116.8,262.3c0,134-113,296.8-235.5,342.7c-32.6,13.4-237.4,21.1-520.8,21.1h-467.2l-5.7,494c-5.7,492.1-5.7,495.9-53.6,564.9c-55.5,82.3-208.7,166.6-294.9,164.7C7238.3,1230.4,7186.6,1220.8,7154.1,1209.3z"/></g></g></svg>';
 		function cancelRequest(user_id) {
 			fetch('/add_friend', {
 				method: 'POST',
@@ -151,7 +153,7 @@
 				// Если data.success не пустой, то значит запрос на добавление в друзья был успешно отправлен
 				if (data.success != '') {
 					// Меняем текст, класс и id кнопки на "Add to friend list"
-					document.getElementById(`cancel ${user_id}`).innerHTML = my_svg_cancel;
+					document.getElementById(`cancel ${user_id}`).innerHTML = '<svg class="icon" width="2em" height="2em" viewBox="0 0 1000 1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  enable-background="new 0 0 1000 1000" xml:space="preserve"><g><g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"><path d="M2704.2,4987.1c-34.5-34.5-36.4-57.4-28.7-245.1c24.9-505.5,34.5-988,23-1020.6c-24.9-68.9-95.7-65.1-245.1,9.6c-130.2,65.1-139.8,67-183.8,38.3c-24.9-15.3-46-46-46-67c0-21.1,53.6-281.5,118.7-580.2l118.7-540l11.5-651l11.5-651l90-268.1c162.8-478.7,344.7-781.2,633.8-1058.9c86.2-82.4,222.1-191.5,304.4-243.2l149.4-93.8l-13.4-97.6c-5.7-51.7-15.3-101.5-19.1-107.2c-3.8-7.6-134-17.2-289.1-23c-162.7-5.8-327.4-23-388.7-40.2c-162.8-45.9-361.9-155.1-484.4-266.1c-151.3-137.9-1106.7-1401.6-1192.9-1577.8c-97.7-199.1-122.5-365.7-122.5-802.3c0-430.8,24.9-597.4,124.5-802.3c74.7-155.1,183.8-293,321.7-405.9c99.6-82.3,291-187.6,382.9-208.7l51.7-11.5v407.8c0,226,9.6,442.3,19.2,480.6c24.9,88.1,126.4,178.1,218.3,195.3c107.2,21.1,227.8-44.1,277.6-149.4c36.4-74.7,40.2-114.9,40.2-534.2V-4780h1876.4h1876.4v474.9c0,434.6,3.8,478.7,38.3,534.2c74.7,124.5,201,162.8,333.2,103.4c158.9-68.9,164.7-91.9,164.7-637.6V-4780l63.2,11.5c285.3,49.8,520.8,170.4,704.6,365.7c147.4,157,208.7,256.6,279.6,457.6c53.6,149.4,53.6,155.1,53.6,630c0,409.8-5.7,494-34.5,591.7c-51.7,164.7-132.1,314-243.2,453.8l-97.6,120.6l-329.4,1.9c-298.7,1.9-344.6,7.6-497.8,53.6c-698.9,214.5-1166.1,723.8-1319.3,1439.9c-40.2,189.6-28.7,562.9,21.1,765.9c49.8,195.3,155.1,432.7,264.2,597.4c164.7,248.9,497.8,536.1,752.5,647.2c47.9,21.1,91.9,46,99.6,57.4c7.6,9.6,15.3,394.4,13.4,852.1c0,917.2-9.6,1041.6-109.1,1250.3c-151.3,323.6-419.3,545.7-760.2,635.7c-91.9,23-250.8,28.7-871.2,30.6h-756.3l-170.4,220.2c-93.8,120.6-189.6,233.6-214.5,248.9c-57.4,38.3-113,9.6-151.3-78.5c-24.9-63.2-51.7-78.5-122.5-67c-15.3,1.9-122.5,82.3-239.3,180C2771.2,5052.2,2769.3,5052.2,2704.2,4987.1z"/><path d="M7154.1,1209.3c-93.8-34.5-160.8-90-206.8-174.2c-40.2-76.6-42.1-107.2-47.9-553.4l-7.7-472.9L6409.2,3c-474.8-5.7-484.4-5.7-551.4-51.7C5608.9-221,5645.3-575.2,5922.9-692c57.4-23,158.9-28.7,520.8-28.7h448l7.7-472.9c5.7-517,9.6-534.2,124.5-639.5c80.4-76.6,126.4-93.8,239.3-93.8c124.5,0,212.5,42.1,291.1,139.8l59.3,74.7l5.7,495.9l5.7,495.9h459.5c490.2,0,545.7,9.6,647.2,101.5c61.3,57.4,116.8,180,116.8,262.3c0,134-113,296.8-235.5,342.7c-32.6,13.4-237.4,21.1-520.8,21.1h-467.2l-5.7,494c-5.7,492.1-5.7,495.9-53.6,564.9c-55.5,82.3-208.7,166.6-294.9,164.7C7238.3,1230.4,7186.6,1220.8,7154.1,1209.3z"/></g></g></svg>';
 					document.getElementById(`cancel ${user_id}`).setAttribute('class','add');
 					document.getElementById(`cancel ${user_id}`).setAttribute('onclick', `addToFriendList(${user_id})`);
 					document.getElementById(`cancel ${user_id}`).setAttribute('id', `add ${user_id}`);
@@ -250,16 +252,53 @@
 				}
 
 				// Обрабатываем сообщения
+				// <div class="message" id="123456">
+				// 	<div class="us_logo">
+				// 		<img src="static/icons/us_logo.png" alt=""></img>
+				// 	</div>
+				// 	<div class="message_info">
+				// 		<div class="name">Name Surname</div>
+				// 		<div class="message_content">Hello world!</div>
+				// 	</div>
+				// </div>
 				data.messages.forEach(message => {
-					var messageElement = document.createElement('div');
-					messageElement.classList.add('message');
-					if (message.user_id == data.user_id) {
-						messageElement.classList.add('my_message');
-					}
-					messageElement.innerHTML = `
-						<div class="message_text" id="${message.message_id}">${message.message}</div>
-					`;
-					document.getElementById('chat_content').appendChild(messageElement);
+					// Создаем <div class="message">
+					var messageContainer = document.createElement('div');
+					messageContainer.classList.add('message');
+					messageContainer.setAttribute('id', message.message_id);
+
+					// Создаем <div class="us_logo">
+					var usLogo = document.createElement('div');
+					usLogo.classList.add('us_logo');
+					// Создаем <img src="static/icons/us_logo.png" alt=""></img>
+					var usLogoImg = document.createElement('img');
+					usLogoImg.setAttribute('src', 'static/icons/us_logo.png');
+					usLogoImg.setAttribute('alt', '');
+					// Добавляем <img src="static/icons/us_logo.png" alt=""></img> внутрь <div class="us_logo">
+					usLogo.appendChild(usLogoImg);
+					// Добавляем <div class="us_logo"> внутрь <div class="message">
+					messageContainer.appendChild(usLogo);
+
+					// Создаем <div class="message_info">
+					var messageInfo = document.createElement('div');
+					messageInfo.classList.add('message_info');
+					// Создаем <div class="name">Name Surname</div>
+					var name = document.createElement('div');
+					name.classList.add('name');
+					name.innerHTML = message.name;
+					// Создаем <div class="message_content">Hello world!</div>
+					var messageContent = document.createElement('div');
+					messageContent.classList.add('message_content');
+					messageContent.innerHTML = message.message;
+					// Добавляем <div class="name">Name Surname</div> внутрь <div class="message_info">
+					messageInfo.appendChild(name);
+					// Добавляем <div class="message_content">Hello world!</div> внутрь <div class="message_info">
+					messageInfo.appendChild(messageContent);
+					// Добавляем <div class="message_info"> внутрь <div class="message">
+					messageContainer.appendChild(messageInfo);
+
+					// Добавляем <div class="message"> внутрь <div id="chat_content">
+					document.getElementById('chat_content').appendChild(messageContainer);
 				});
 			})
 		}
@@ -277,8 +316,18 @@
 		// Отправка сообщения
 		function sendMessage() {
 			var message = document.getElementById('chat_input_message').value;
-			socket.emit('message', message);
-			document.getElementById('chat_input_message').value = '';
+			var packet = {
+				'chat_id': current_chat_id,
+				'message': message,
+			};
+			socket.emit('message', packet);
+
+			var chatContent = document.getElementById('chat_content');
+			var message = document.createElement('div');
+			message.classList.add('message');
+			message.innerHTML = message;
+			chatContent.appendChild(message);
+			
 		}
 	</script>
 </body>
