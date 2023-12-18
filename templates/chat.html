@@ -218,7 +218,7 @@
 				from = 0;
 			}
 			if (to == undefined) {
-				to = 20;
+				to = 25;
 			}
 			// Отправляем AJAX-запрос на открытие личного чата с пользователем
 			fetch('/personal_messages', {
@@ -239,13 +239,10 @@
 				// Меняем название чата
 				document.getElementById('chat_name').innerHTML = data.chat_name;
 
-				// Проверка на изменение id чата
-				if (current_chat_id != data.chat_id) {
-					// Очищаем предыдущие сообщения
-					document.getElementById('chat_content').innerHTML = '';
-					// Обновляем id чата
-					current_chat_id = data.chat_id;
-				}
+				// Очищаем предыдущие сообщения
+				document.getElementById('chat_content').innerHTML = '';
+				// Обновляем id чата
+				current_chat_id = data.chat_id;
 
 				// Обрабатываем сообщения
 				// <div class="message" id="123456">
@@ -258,6 +255,7 @@
 				// 	</div>
 				// </div>
 				data.messages.forEach(message => {
+					// Выводим сообщения в чат
 					// Создаем <div class="message">
 					var messageContainer = document.createElement('div');
 					messageContainer.classList.add('message');
@@ -281,11 +279,15 @@
 					// Создаем <div class="name">Name Surname</div>
 					var name = document.createElement('div');
 					name.classList.add('name');
-					name.innerHTML = message.name;
-					// Создаем <div class="message_content">Hello world!</div>
+					if (message.user_id == data.target_id) {
+						name.innerHTML = data.chat_name;
+					} else {
+						name.innerHTML = data.user_name;
+					}
+					// Создаем <div class="message_content">text</div>
 					var messageContent = document.createElement('div');
 					messageContent.classList.add('message_content');
-					messageContent.innerHTML = message.message;
+					messageContent.innerHTML = message.content;
 					// Добавляем <div class="name">Name Surname</div> внутрь <div class="message_info">
 					messageInfo.appendChild(name);
 					// Добавляем <div class="message_content">Hello world!</div> внутрь <div class="message_info">
@@ -302,11 +304,35 @@
 		// Подключение к сокету
 		var socket = io.connect('http://' + document.domain + ':' + location.port);
 		socket.on('message', function(msg) {
-			var chatContent = document.getElementById('chat_content');
-			var message = document.createElement('div');
-			message.classList.add('message');
-			message.innerHTML = msg;
-			chatContent.appendChild(message);
+			console.log('Received message', msg);
+			
+			// Выводим сообщение в чат
+			var messageContainer = document.createElement('div');
+			messageContainer.classList.add('message');
+			messageContainer.setAttribute('id', msg.messages[0].message_id);
+			var usLogo = document.createElement('div');
+			usLogo.classList.add('us_logo');
+			var usLogoImg = document.createElement('img');
+			usLogoImg.setAttribute('src', 'static/icons/us_logo.png');
+			usLogoImg.setAttribute('alt', '');
+			usLogo.appendChild(usLogoImg);
+			messageContainer.appendChild(usLogo);
+			var messageInfo = document.createElement('div');
+			messageInfo.classList.add('message_info');
+			var name = document.createElement('div');
+			name.classList.add('name');
+			if (msg.messages[0].user_id == msg.target_id) {
+				name.innerHTML = msg.chat_name;
+			} else {
+				name.innerHTML = msg.user_name;
+			}
+			var messageContent = document.createElement('div');
+			messageContent.classList.add('message_content');
+			messageContent.innerHTML = msg.messages[0].content;
+			messageInfo.appendChild(name);
+			messageInfo.appendChild(messageContent);
+			messageContainer.appendChild(messageInfo);
+			document.getElementById('chat_content').appendChild(messageContainer);
 		});
 
 		// Отправка сообщения
@@ -317,12 +343,8 @@
 				'message': message,
 			};
 			socket.emit('message', packet);
-
-			var chatContent = document.getElementById('chat_content');
-			var message = document.createElement('div');
-			message.classList.add('message');
-			message.innerHTML = message;
-			chatContent.appendChild(message);
+			
+			// Выводим сообщение в чат
 			
 		}
 	</script>
