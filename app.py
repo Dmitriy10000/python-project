@@ -10,7 +10,7 @@
 # SQLAlchemy
 
 
-from flask import Flask, session
+from flask import Flask, request, session
 from flask_socketio import SocketIO, send, emit
 from utils.db_manager import create_database_tables, get_session
 from classes.users import Users
@@ -21,7 +21,7 @@ from views.auth_views import auth_bp
 from views.index_views import index_bp
 from views.add_friend_views import add_friend_bp
 from views.search_views import search_bp
-from views.chat_views import chat_bp
+from views.chat_views import chat_bp, user_in_chat
 from datetime import datetime
 import logging
 import os
@@ -38,6 +38,7 @@ logging.basicConfig(filename=f'{path}/logs/' + datetime.now().strftime("%Y-%m-%d
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 socketio = SocketIO(app)
+Session = get_session()
 
 
 # Регистрируем блюпринты
@@ -48,27 +49,68 @@ app.register_blueprint(search_bp, name='search')
 app.register_blueprint(chat_bp, name='chat')
 
 
-
-
-
+user_in_socket = {}
 
 
 # Маршрут для сообщений
 @socketio.on('message')
 def handle_message(msg):
+	print(request.sid)
 	# Получаем данные пользователя
-	Session = get_session()
 	user_id = session.get('user_id')
 	with Session as SQLSession:
 		user = SQLSession.query(Users).filter(Users.user_id == user_id).first()
-	# Отправляем сообщение
-	print('user', user.user_id)
-	print('msg', msg)
-	send(msg, broadcast=True)
+		need_chat_id = user_in_chat[user.user_id]
+		
+		# debug
+		print('aboboaobaobaobaoboa', user_in_chat)
+		print('Входящее сообщение от пользователя с id', user.user_id, 'содержание:', msg)
+		
+		# Записываем сообщение в бд
+		try:
+			message = Messages(user_id=user.user_id, chat_id=user_in_chat[user.user_id], content=msg['message'], timestamp=datetime.now())
+			SQLSession.add(message)
+			SQLSession.commit()
+		except Exception as e:
+			print('Ошибка при записи сообщения в бд', e)
 
+		# Отправляем сообщение всем участникам чата, которые находятся во вкладке чата, совпадающей с чатом, в котором было отправлено сообщение
+		print('user_in_chat', user_in_chat)
+		for user_id in user_in_chat:
+			print('user_id', user_id)
+			print('need_chat_id', need_chat_id)
+			print('user_in_chat[user_id]', user_in_chat[user_id])
 
+			# Пропускаем пользователей, которые не находятся во вкладке чата, совпадающей с чатом, в котором было отправлено сообщение
+			if user_in_chat[user_id] != need_chat_id:
+				continue
+			
+			# Получаем имя и фамилию пользователя, который отправил сообщение
+			with Session as SQLSession:
+				user = SQLSession.query(Users).filter(Users.user_id == user_id).first()
 
+			# Пакуем сообщение в json
+			data = {
+				'user_id': user.user_id,
+				'target_id': user_id,
+				'chat_id': need_chat_id,
+				'chat_name': user.name + ' ' + user.surname,
+				'timestamp': datetime.now().strftime("%d.%m.%Y %H:%M:%S"),
+				'message': msg,
+			}
 
+			# Отправляем сообщение
+			print('Отправляем сообщение', data, 'в комнату', user_in_socket[user_id])
+			emit('message', data, room=user_in_socket[user_id])
+				
+
+# Инициализируем сокеты
+@socketio.on('connect')
+def test_connect():
+	print('Client connected')
+	user_id = session.get('user_id')
+	user_in_socket[user_id] = request.sid
+	print('user_in_socket', user_in_socket)
 
 
 # Запускаем приложение
@@ -77,4 +119,3 @@ if __name__ == '__main__':
 	Session = get_session()
 	app.run(debug=True)
 	socketio.run(app, debug=True)
-
