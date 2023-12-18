@@ -76,7 +76,7 @@
 						listItem.classList.add('search_result');
 						listItem.innerHTML = `
 							<div class="us_logo">
-								<img src="static/icons/us_logo.png" alt="">
+								<img src="static/icons/us_logo.png" alt=""></img>
 							</div>
 							<div class="us_name">${user.name} ${user.surname}</div>
 						`;
@@ -248,16 +248,53 @@
 				}
 
 				// Обрабатываем сообщения
+				// <div class="message" id="123456">
+				// 	<div class="us_logo">
+				// 		<img src="static/icons/us_logo.png" alt=""></img>
+				// 	</div>
+				// 	<div class="message_info">
+				// 		<div class="name">Name Surname</div>
+				// 		<div class="message_content">Hello world!</div>
+				// 	</div>
+				// </div>
 				data.messages.forEach(message => {
-					var messageElement = document.createElement('div');
-					messageElement.classList.add('message');
-					if (message.user_id == data.user_id) {
-						messageElement.classList.add('my_message');
-					}
-					messageElement.innerHTML = `
-						<div class="message_text" id="${message.message_id}">${message.message}</div>
-					`;
-					document.getElementById('chat_content').appendChild(messageElement);
+					// Создаем <div class="message">
+					var messageContainer = document.createElement('div');
+					messageContainer.classList.add('message');
+					messageContainer.setAttribute('id', message.message_id);
+
+					// Создаем <div class="us_logo">
+					var usLogo = document.createElement('div');
+					usLogo.classList.add('us_logo');
+					// Создаем <img src="static/icons/us_logo.png" alt=""></img>
+					var usLogoImg = document.createElement('img');
+					usLogoImg.setAttribute('src', 'static/icons/us_logo.png');
+					usLogoImg.setAttribute('alt', '');
+					// Добавляем <img src="static/icons/us_logo.png" alt=""></img> внутрь <div class="us_logo">
+					usLogo.appendChild(usLogoImg);
+					// Добавляем <div class="us_logo"> внутрь <div class="message">
+					messageContainer.appendChild(usLogo);
+
+					// Создаем <div class="message_info">
+					var messageInfo = document.createElement('div');
+					messageInfo.classList.add('message_info');
+					// Создаем <div class="name">Name Surname</div>
+					var name = document.createElement('div');
+					name.classList.add('name');
+					name.innerHTML = message.name;
+					// Создаем <div class="message_content">Hello world!</div>
+					var messageContent = document.createElement('div');
+					messageContent.classList.add('message_content');
+					messageContent.innerHTML = message.message;
+					// Добавляем <div class="name">Name Surname</div> внутрь <div class="message_info">
+					messageInfo.appendChild(name);
+					// Добавляем <div class="message_content">Hello world!</div> внутрь <div class="message_info">
+					messageInfo.appendChild(messageContent);
+					// Добавляем <div class="message_info"> внутрь <div class="message">
+					messageContainer.appendChild(messageInfo);
+
+					// Добавляем <div class="message"> внутрь <div id="chat_content">
+					document.getElementById('chat_content').appendChild(messageContainer);
 				});
 			})
 		}
@@ -275,8 +312,18 @@
 		// Отправка сообщения
 		function sendMessage() {
 			var message = document.getElementById('chat_input_message').value;
-			socket.emit('message', message);
-			document.getElementById('chat_input_message').value = '';
+			var packet = {
+				'chat_id': current_chat_id,
+				'message': message,
+			};
+			socket.emit('message', packet);
+
+			var chatContent = document.getElementById('chat_content');
+			var message = document.createElement('div');
+			message.classList.add('message');
+			message.innerHTML = message;
+			chatContent.appendChild(message);
+			
 		}
 	</script>
 </body>

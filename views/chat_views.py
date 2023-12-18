@@ -106,7 +106,7 @@ def chat():
 # 	print('data', data)
 # 	return jsonify(data)
 
-
+user_in_chat = {}
 # Маршрут для чата
 @chat_bp.route('/personal_messages', methods=['POST'])
 def personal_messages():
@@ -132,10 +132,13 @@ def personal_messages():
 				messages = SQLSession.query(Messages).filter(Messages.chat_id == chat.chat_id).order_by(Messages.timestamp.desc()).limit(20).all()
 				# Пакуем данные в json
 				data = {
+					'user_id': int(user_id),
+					'target_id': int(target_id),
+					'chat_id': int(chat.chat_id),
+					'chat_name': target.name + ' ' + target.surname,
 					'messages': messages,
-					'chat_id': chat.chat_id,
-					'chat_name': target.name + ' ' + target.surname
 				}
+				user_in_chat[user_id] = chat.chat_id
 				# Возвращаем json
 				print('data', data)
 				return jsonify(data)
@@ -175,12 +178,13 @@ def personal_messages():
 				messages = SQLSession.query(Messages).filter(Messages.chat_id == chat.chat_id).order_by(Messages.timestamp.desc()).limit(20).all()
 				# Пакуем данные в json
 				data = {
-					'user_id': user_id,
-					'target_id': target_id,
-					'chat_id': chat.chat_id,
+					'user_id': int(user_id),
+					'target_id': int(target_id),
+					'chat_id': int(chat.chat_id),
 					'chat_name': target.name + ' ' + target.surname,
 					'messages': messages,
 				}
+				user_in_chat[user_id] = chat.chat_id
 				# Возвращаем json
 				print('data', data)
 				return jsonify(data)
