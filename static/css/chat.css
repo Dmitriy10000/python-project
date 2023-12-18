@@ -165,6 +165,10 @@ input[type=text]:hover{
 	background-color: var(--main_bg);
 	
 }
+.search_list {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
 .search_result{
 	display: flex;
 	color:white;
@@ -174,9 +178,12 @@ input[type=text]:hover{
 	display: flex;
   	/* justify-content: ; */
  	align-items: center;
+<<<<<<< HEAD
 	animation-duration: 1s;
 	transition-duration: 1s;
 	
+=======
+>>>>>>> 0e8b2b31cab3e60387c5cbf0f88de8725d9706fd
 }
 .search_result:hover{
 	background-color: #2F4E51;
