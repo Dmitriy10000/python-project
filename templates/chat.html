@@ -19,27 +19,30 @@
 					</div>
 				</div>
 				<div class="search_in_chat">
-					<input type="text" name="search" id="globalSearchInput" oninput="globalSearch()" placeholder="Search for users and groups">
+					<input type="text" name="search" id="globalSearchInput" oninput="globalSearch()" placeholder="Search for users and groups" autocomplete="off">
 				</div>
 				<div id="searchResults">
 					<!-- Здесь будут отображаться результаты поиска -->
 				</div>
 			</div>
-			<div class="header">
-				<div class="header_name">Volodya</div>
+			<div class="chat_container">
+				<div class="header">
+					<div class="chat_name" id="chat_name">Volodya</div>
+				</div>
+				<div class="chat_content" id="chat_content">
+					<!-- Здесь будут отображаться сообщения -->
+				</div>
+				<div class="footer_input">
+					<div class="chat_input">
+						<input type="text" id="chat_input_message" placeholder="Type here" autocomplete="off">
+						<button type="submit" onclick="sendMessage()" >Send</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="footer_input">
-		<div class="chat_input">
-			<form>
-				<input type="text" name="chat" placeholder="Type here">
-				
-				<button type="submit">Send</button>
-			</form>
-	</div>
 
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
 	<script>
 		var searchTimeout;
 		// Выполняем AJAX-запрос к серверу для глобального поиска
@@ -206,7 +209,6 @@
 
 		// Открытие личного чата с пользователем
 		function personalMessage(user_id) {
-			// Отправляем AJAX-запрос на открытие личного чата с пользователем
 			fetch('/personal_message', {
 				method: 'POST',
 				headers: {
@@ -225,6 +227,22 @@
 					window.location.href = '/personal_message';
 				}
 			})
+		}
+
+		var socket = io.connect('http://' + document.domain + ':' + location.port);
+		socket.on('message', function(msg) {
+			var chatContent = document.getElementById('chat_content');
+			var message = document.createElement('div');
+			message.classList.add('message');
+			message.innerHTML = msg;
+			chatContent.appendChild(message);
+		});
+
+		// Отправка сообщения
+		function sendMessage() {
+			var message = document.getElementById('chat_input_message').value;
+			socket.emit('message', message);
+			document.getElementById('chat_input_message').value = '';
 		}
 	</script>
 </body>
