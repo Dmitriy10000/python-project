@@ -10,7 +10,7 @@
 # SQLAlchemy
 
 
-from flask import Flask, render_template, request, redirect, session, jsonify, url_for
+from flask import Flask
 from db_manager import create_database_tables, get_session
 from views.auth_views import auth_bp
 from views.index_views import index_bp
@@ -18,12 +18,6 @@ from views.add_friend_views import add_friend_bp
 from views.search_views import search_bp
 from views.chat_views import chat_bp
 from datetime import datetime
-from classes.users import Users
-from classes.friends import Friends
-from classes.invites import Invites
-from classes.messages import Messages
-from classes.chats import Chats
-from classes.chat_members import ChatMembers
 import logging
 import os
 
