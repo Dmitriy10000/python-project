@@ -74,8 +74,7 @@ def handle_message(msg):
 			SQLSession.commit()
 
 			# Получаем id сообщения
-			with Session as SQLSession:
-				temp_message = SQLSession.query(Messages).filter(Messages.user_id == user_id).filter(Messages.timestamp == tmp_time).first()
+			temp_message = SQLSession.query(Messages).filter(Messages.user_id == user_id).filter(Messages.timestamp == tmp_time).first()
 		except Exception as e:
 			print('Ошибка при записи сообщения в бд', e)
 
