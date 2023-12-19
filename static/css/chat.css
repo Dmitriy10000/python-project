@@ -63,7 +63,7 @@ svg,g,g{
 
 }
 .Section_friends.ON{
-	width: 62vh;
+	width: 29vw;
 }
 
 
@@ -76,7 +76,7 @@ svg,g,g{
 
 	margin-left: 0;
 	height: 100vh;
-	width: 30%;
+	width: 30vw;
 	background-color: #2E3748;
 	border-right: var(--border);
 }

@@ -155,3 +155,51 @@ def add_friend():
 			SQLsession.commit()
 			print('Приглашение удалено')
 			return jsonify({'success': 'Пользователь успешно добавлен в друзья'})
+
+
+# Принимаем post запрос на получение списка приглашений и списка друзей
+@add_friend_bp.route('/friend_list', methods=['POST'])
+def global_user_search():
+	# Проверяем запросы в друзья
+	with Session as SQLsession:
+		# Получаем id текущего пользователя
+		user_id = session.get('user_id')
+
+		# Получаем список приглашений
+		invites = SQLsession.query(Invites).filter_by(user_id2=user_id).all()
+
+		# Получаем список друзей
+		friends = SQLsession.query(Friends).filter_by(user_id1=user_id).all()
+		friends += SQLsession.query(Friends).filter_by(user_id2=user_id).all()
+
+		# Удаляем из списка текущего пользователя
+		for invite in invites:
+			if invite.user_id1 == user_id:
+				invites.remove(invite)
+				break
+		for friend in friends:
+			if friend.user_id1 == user_id:
+				friends.remove(friend)
+				break
+		for friend in friends:
+			if friend.user_id2 == user_id:
+				friends.remove(friend)
+				break
+
+		# Пакуем данные в json и отправляем
+		invites_json = []
+		friends_json = []
+		
+		for invite in invites:
+			# Получаем данные пользователя, отправившего приглашение
+			user = SQLsession.query(Users).filter_by(user_id=invite.user_id1).first()
+			invites_json.append({'user_id': user.user_id, 'login': user.login, 'name': user.name, 'surname': user.surname})
+		
+		for friend in friends:
+			# Получаем данные друга
+			if friend.user_id1 == user_id:
+				user = SQLsession.query(Users).filter_by(user_id=friend.user_id2).first()
+			else:
+				user = SQLsession.query(Users).filter_by(user_id=friend.user_id1).first()
+			friends_json.append({'user_id': user.user_id, 'login': user.login, 'name': user.name, 'surname': user.surname})
+		return jsonify({'invites': invites_json, 'friends': friends_json})
