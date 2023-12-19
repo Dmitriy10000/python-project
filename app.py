@@ -63,7 +63,7 @@ def handle_message(msg):
 		need_chat_id = user_in_chat[user_id]
 		
 		# debug
-		print('aboboaobaobaobaoboa', user_in_chat)
+		print('user_in_chat', user_in_chat)
 		print('Входящее сообщение от пользователя с id', user_id, 'содержание:', msg)
 		
 		# Записываем сообщение в бд
