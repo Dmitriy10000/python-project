@@ -177,14 +177,12 @@ def global_user_search():
 			if invite.user_id1 == user_id:
 				invites.remove(invite)
 				break
+		friend_list = []
 		for friend in friends:
 			if friend.user_id1 == user_id:
-				friends.remove(friend)
-				break
-		for friend in friends:
-			if friend.user_id2 == user_id:
-				friends.remove(friend)
-				break
+				friend_list.append(friend.user_id2)
+			else:
+				friend_list.append(friend.user_id1)
 
 		# Пакуем данные в json и отправляем
 		invites_json = []
@@ -195,11 +193,12 @@ def global_user_search():
 			user = SQLsession.query(Users).filter_by(user_id=invite.user_id1).first()
 			invites_json.append({'user_id': user.user_id, 'login': user.login, 'name': user.name, 'surname': user.surname})
 		
-		for friend in friends:
+		for friend in friend_list:
 			# Получаем данные друга
-			if friend.user_id1 == user_id:
-				user = SQLsession.query(Users).filter_by(user_id=friend.user_id2).first()
-			else:
-				user = SQLsession.query(Users).filter_by(user_id=friend.user_id1).first()
+			user = SQLsession.query(Users).filter_by(user_id=friend).first()
 			friends_json.append({'user_id': user.user_id, 'login': user.login, 'name': user.name, 'surname': user.surname})
+		
+		print('invites_json', invites_json)
+		print('friends_json', friends_json)
+		
 		return jsonify({'invites': invites_json, 'friends': friends_json})
