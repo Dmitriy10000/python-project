@@ -106,15 +106,18 @@ svg,g,g{
 	justify-content: space-between;
 	
 }
+.delete svg{
+	transition-duration: 1s;
+}
 .delete svg:hover{
-	fill: none;
+	fill: white;
 } 
 .buttons .delete:hover{
 	fill: none;
 
 }
 button svg{
-	fill: none;
+	/* fill: none; */
 }
 .logo a{
 
