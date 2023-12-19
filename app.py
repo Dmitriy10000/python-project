@@ -122,5 +122,5 @@ def test_connect():
 if __name__ == '__main__':
 	create_database_tables()
 	Session = get_session()
-	app.run(debug=True)
-	socketio.run(app, debug=True)
+	app.run(debug=False)
+	socketio.run(app, debug=False)
