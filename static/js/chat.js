@@ -209,7 +209,7 @@ function personalMessages(user_id, from, to) {
 		current_chat_id = data.chat_id;
 
 		// Обрабатываем сообщения
-		// <div class="message" id="123456">
+		// <div class="message mess_in" id="123456">
 		// 	<div class="us_logo">
 		// 		<img src="static/icons/us_logo.png" alt=""></img>
 		// 	</div>
@@ -223,7 +223,14 @@ function personalMessages(user_id, from, to) {
 			
 			// Выводим сообщения в чат
 			var messageContainer = document.createElement('div');
-			messageContainer.classList.add('message');
+
+			// если входящее сообщение то класс mess_in, если исходящее то mess_out
+			if (message.user_id == data.user_id) {
+				messageContainer.classList.add('message', 'mess_out');
+			}
+			else {
+				messageContainer.classList.add('message', 'mess_in');
+			}
 			messageContainer.setAttribute('id', message.message_id);
 			var usLogo = document.createElement('div');
 			usLogo.classList.add('us_logo');
@@ -260,7 +267,8 @@ var socket = io.connect('http://' + document.domain + ':' + location.port);
 socket.on('message', function(msg) {
 	console.log('Received message', msg);
 	var messageContainer = document.createElement('div');
-	// если входящее сообщение то класс mess_in
+
+	// если входящее сообщение то класс mess_in, если исходящее то mess_out
 	if (msg.user_id == current_user_id) {
 		messageContainer.classList.add('message', 'mess_out');
 	}
