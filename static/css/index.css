@@ -20,6 +20,22 @@ a:hover {
 .link {
   color: #c4c3ca;
 }
+.logo a{
+
+	color: #4BD295;
+	font-weight: 800;
+	font-size: 2em;
+  	margin: 128px;
+	text-decoration: none;
+	animation-duration: 1s;
+	transition-duration: 1s;
+
+
+}
+.logo a:hover{
+	font-weight: 900;
+	animation-duration: 1s;
+}
 .link:hover {
   color: #ffeba7;
 }
@@ -267,6 +283,9 @@ h6 span{
 }
 .btn:hover{  
   box-shadow: 0 8px 36px 0 rgba(56, 197, 133,10);
+  color:white;
+}
+.chat_name{
   color:white;
 }
 
