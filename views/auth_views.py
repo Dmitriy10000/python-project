@@ -53,16 +53,16 @@ def check_login_availability():
 
 
 # Маршрут для создания пользователя
-@auth_bp.route('/register', methods=['GET', 'POST'])
+@auth_bp.route('/register', methods=['POST'])
 def register():
 	if request.method == 'POST':
-		login = request.form['login']
+		login = request.form['r_login']
 
 		# Проверяем, существует ли пользователь с таким логином
 		with Session as SQLsession:
 			existing_user = SQLsession.query(Users).filter_by(login=login).first()
 			if existing_user:
-				return jsonify({'error': 'Пользователь с таким логином уже существует'})
+				return render_template('error.html', error='Пользователь с таким логином уже существует')
 		
 		password = request.form['password']
 		email = request.form['email']
@@ -76,8 +76,7 @@ def register():
 			user = SQLsession.query(Users).filter_by(login=login).first()
 			session['user_id'] = user.user_id
 		return redirect('/')
-
-	return render_template('register.html')
+	return redirect('/')
 
 
 # Маршрут для выхода из аккаунта

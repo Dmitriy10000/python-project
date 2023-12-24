@@ -3,7 +3,6 @@ from sqlalchemy import Column, Integer, Date, Boolean
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
-# darova dima eto Ivan
 class ChatMembers(Base):
 	__tablename__ = 'chat_members'
 	chat_id = Column(Integer, nullable=False)

@@ -10,7 +10,7 @@
 # SQLAlchemy
 
 
-from flask import Flask, request, session
+from flask import Flask, render_template, request, session
 from flask_socketio import SocketIO, send, emit
 from utils.db_manager import create_database_tables, get_session
 from classes.users import Users
@@ -115,6 +115,11 @@ def test_connect():
 	user_id = session.get('user_id')
 	user_in_socket[user_id] = request.sid
 	print('user_in_socket', user_in_socket)
+
+
+@app.route('/error')
+def error():
+	return render_template('error.html')
 
 
 # Запускаем приложение
