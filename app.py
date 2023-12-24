@@ -126,5 +126,5 @@ def error():
 if __name__ == '__main__':
 	create_database_tables()
 	Session = get_session()
-	app.run(debug=False)
-	socketio.run(app, debug=False)
+	app.run(debug=True)
+	socketio.run(app, debug=True)
