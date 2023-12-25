@@ -199,6 +199,7 @@ function deleteFriend(user_id) {
 
 var current_chat_id = 0;
 var current_user_id = 0;
+var current_target_id = 0;
 var chat_name = '';
 
 // Открытие личного чата с пользователем
@@ -232,8 +233,11 @@ function personalMessages(user_id, from, to) {
 
 		// Очищаем предыдущие сообщения
 		document.getElementById('chat_content').innerHTML = '';
-		// Обновляем id чата
+		
+		// Обновляем id чата, id пользователя и id собеседника
 		current_chat_id = data.chat_id;
+		current_user_id = data.user_id;
+		current_target_id = data.target_id;
 
 		// Обрабатываем сообщения
 		// <div class="message mess_in" id="123456">
@@ -246,13 +250,11 @@ function personalMessages(user_id, from, to) {
 		// 	</div>
 		// </div>
 		data.messages.forEach(message => {
-			current_user_id = data.user_id;
-			
 			// Выводим сообщения в чат
 			var messageContainer = document.createElement('div');
 
 			// если входящее сообщение то класс mess_in, если исходящее то mess_out
-			if (message.user_id == data.user_id) {
+			if (message.user_id == current_user_id) {
 				messageContainer.classList.add('message', 'mess_out');
 			}
 			else {
