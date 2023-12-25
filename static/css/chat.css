@@ -74,20 +74,68 @@ svg,g,g{
 	transition-duration: 1s;
 
 }
-.friend
-.friend:hover {
-	background-color: #2F4E51;
-	border-right: 1px solid rgb(56,197,133);
+.request{
+	/* display: flex; */
+    color: white;
+    justify-content: space-between;
+    padding: 10px;
+    border-right: 1px solid #333B4A;
+    display: flex;
+    align-items: center;
+    animation-duration: 1s;
+    transition-duration: 1s;
+	box-sizing: border-box;
 }
+.request:hover{
+	background-color: #2F4E51;
+    border-right: 1px solid rgb(56,197,133);
+}
+.request .us_name{
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.friend:hover{
+	background-color: #2F4E51;
+    border-right: 1px solid rgb(56,197,133);
+}
+.friend:hover .buttons button {
+	background-color: #2F4E51;
+}
+.request:hover .buttons button {
+	background-color: #2F4E51;
+}
+.request .buttons .decline svg:hover,.request .buttons .accept svg:hover{
+
+	fill: white;
+
+}
+.request .buttons button{
+	border:none;
+	background-color: var(--main_bg);
+    transition-duration: 1s;
+}
+
 .Section_friends.ON{
 	width: 29vw;
+}
+.accept{
+	background-color: var(--main_bg);
+    transition-duration: 1s;
+	border: none;
 }
 
 
 .active, .active svg path{
 	color:rgb(255, 255, 255);
-	background-color:#4BD295;
+	background-color:rgb(75, 210, 149);
 	fill: white;
+}
+.add:hover svg {
+	fill:white
 }
 .sidebar{
 
@@ -112,10 +160,7 @@ svg,g,g{
 .delete svg:hover{
 	fill: white;
 } 
-.buttons .delete:hover{
-	fill: none;
 
-}
 button svg{
 	/* fill: none; */
 }
@@ -188,6 +233,18 @@ input[type=text]:hover{
 	background-color: #4BD295;
 
 }
+.chat_names{
+	display:flex;
+	justify-content: center;
+	font-weight: bold;
+	font-size: 21px;
+	text-transform: uppercase;
+	vertical-align: middle;
+	/* margin-top: 14px; */
+}
+.chat_name{
+	color:white;
+}
 .chat_container {
 	display: flex;
 	flex-direction: column;
@@ -205,7 +262,19 @@ input[type=text]:hover{
 .chat_content {
 	flex-grow: 1;
 	overflow-y: scroll;
+
 }
+.chat_content::-webkit-scrollbar {
+	width: 12px;               /* ширина scrollbar */
+  }
+  .chat_content::-webkit-scrollbar-track {
+	background: var(--border);        /* цвет дорожки */
+  }
+  .chat_content::-webkit-scrollbar-thumb {
+	/* background-color: blue;    цвет плашки */
+	border-radius: 20px;       /* закругления плашки */
+	border: 2px solid var(--border_color);  /* padding вокруг плашки */
+  }
 .footer_input{
 	/* margin-left: 55vh; */
 	/* display: flex; */
