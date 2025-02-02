@@ -19,7 +19,7 @@
 ### Инструкция по установке
 1. Клонируйте репозиторий:
    ```sh
-   git clone <репозиторий>
+   git clone https://github.com/Dmitriy10000/python-project
    cd python-project
    ```
 2. Создайте виртуальное окружение и активируйте его:
