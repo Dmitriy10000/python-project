@@ -1,0 +1,12 @@
+drop table chat_members;
+drop table chats;
+drop table friends;
+drop table invites;
+drop table messages;
+drop table users;
+select * from chat_members;
+select * from chats;
+select * from friends;
+select * from invites;
+select * from messages;
+select * from users;

@@ -25,6 +25,11 @@ from views.chat_views import chat_bp, user_in_chat
 from datetime import datetime
 import logging
 import os
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
 
 
 # Сохраняем логи в папку logs с названием в виде даты
@@ -59,8 +64,11 @@ def handle_message(msg):
 	# Получаем данные текущего пользователя
 	user_id = session.get('user_id')
 	with Session as SQLSession:
+		tmp_time = datetime.now()
 		user = SQLSession.query(Users).filter(Users.user_id == user_id).first()
 		need_chat_id = user_in_chat[user_id]
+		target = SQLSession.query(ChatMembers).filter(ChatMembers.chat_id == need_chat_id).filter(ChatMembers.user_id != user_id).first()
+
 		
 		# debug
 		print('user_in_chat', user_in_chat)
@@ -68,15 +76,19 @@ def handle_message(msg):
 		
 		# Записываем сообщение в бд
 		try:
-			tmp_time = datetime.now()
+			chat_member = SQLSession.query(ChatMembers).filter(ChatMembers.chat_id == need_chat_id).filter(ChatMembers.user_id == user_id).first()
+			symmetric_key = ChatMembers.get_symmetric_key(chat_member, user.get_private_key())
+			print('msg', msg['message'])
 			message = Messages(user_id=user_id, chat_id=user_in_chat[user_id], content=msg['message'], timestamp=tmp_time)
+			ciphertext = message.encrypt_message(symmetric_key)
+			print('ciphertext', ciphertext)
 			SQLSession.add(message)
 			SQLSession.commit()
-
-			# Получаем id сообщения
+			# Получаем сообщение
 			temp_message = SQLSession.query(Messages).filter(Messages.user_id == user_id).filter(Messages.timestamp == tmp_time).first()
 		except Exception as e:
 			print('Ошибка при записи сообщения в бд', e)
+
 
 		# Отправляем сообщение всем участникам чата, которые находятся во вкладке чата, совпадающей с чатом, в котором было отправлено сообщение
 		print('user_in_chat', user_in_chat)
@@ -97,9 +109,11 @@ def handle_message(msg):
 			# Пакуем сообщение в json
 			data = {
 				'user_id': user_id,
-				'user_name': user.name + ' ' + user.surname,
-				'message_id': temp_message.message_id,
-				'content': temp_message.content,
+				'user_name': user.get_name() + ' ' + user.get_surname(),
+				'message_id': temp_message.get_message_id(),
+				# temp_message.get_content() - зашифрованное сообщение
+				# msg['message'] - расшифрованное сообщение
+				'content': msg['message'],
 				'timestamp': temp_message.timestamp.strftime("%d.%m.%Y %H:%M:%S"),
 			}
 

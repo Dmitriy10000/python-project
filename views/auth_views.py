@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, redirect, flash, request, session,
 from utils.db_manager import get_session
 from datetime import datetime
 from classes.users import Users
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
 
 
 auth_bp = Blueprint('auth', __name__)
@@ -64,14 +66,35 @@ def register():
 			if existing_user:
 				return render_template('error.html', error='Пользователь с таким логином уже существует')
 		
-		password = request.form['password']
-		email = request.form['email']
-		name = request.form['name']
-		surname = request.form['surname']
+		user = Users(login=login, password=request.form['password'], email=request.form['email'], name=request.form['name'], surname=request.form['surname'])
+		# password = request.form['password']
+		# email = request.form['email']
+		# name = request.form['name']
+		# surname = request.form['surname']
+
+		# # Генерация пары ключей RSA
+		# private_key = rsa.generate_private_key(
+		# 	public_exponent=65537,
+		# 	key_size=2048,
+		# )
+		# public_key = private_key.public_key()
+
+		# # Сериализация ключей для хранения
+		# private_key_pem = private_key.private_bytes(
+		# 	encoding=serialization.Encoding.PEM,
+		# 	format=serialization.PrivateFormat.PKCS8,
+		# 	encryption_algorithm=serialization.NoEncryption(),
+		# )
+		# public_key_pem = public_key.public_bytes(
+		# 	encoding=serialization.Encoding.PEM,
+		# 	format=serialization.PublicFormat.SubjectPublicKeyInfo,
+		# )
+		# print(f"Private key:\n{private_key_pem.decode()}")
+		# print(f"Public key:\n{public_key_pem.decode()}")
 		with Session as SQLsession:
-			new_user = Users(login=login, password_hash=password, created_at=datetime.now(), email=email, name=name, surname=surname)
-			new_user.set_password_hash_from_password(password)
-			SQLsession.add(new_user)
+			# new_user = Users(login=login, password_hash=password, created_at=datetime.now(), email=email, name=name, surname=surname, public_key=str(public_key_pem.decode()), private_key=str(private_key_pem.decode()))
+			# new_user.set_password_hash_from_password(password)
+			SQLsession.add(user)
 			SQLsession.commit()
 			user = SQLsession.query(Users).filter_by(login=login).first()
 			session['user_id'] = user.user_id

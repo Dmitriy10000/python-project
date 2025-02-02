@@ -6,6 +6,10 @@ from classes.chats import Chats
 from classes.chat_members import ChatMembers
 from classes.messages import Messages
 from datetime import datetime
+# import os
+# from cryptography.hazmat.primitives.asymmetric import padding
+# from cryptography.hazmat.primitives import hashes
+# from cryptography.hazmat.primitives import serialization
 
 
 chat_bp = Blueprint('auth', __name__)
@@ -84,6 +88,8 @@ def personal_messages():
 				messages.reverse()
 				data_messages = []
 				for message in messages:
+					symmetric_key = ChatMembers.get_symmetric_key(chat, user.get_private_key())
+					message.content = message.decrypt_message(symmetric_key)
 					tmp = {
 						'user_id': message.user_id,
 						'message_id': message.message_id,
@@ -111,19 +117,14 @@ def personal_messages():
 		chat.chat_name = 'PM'
 		chat.type = 'PM'
 		chat.created_at = datetime.now()
+		user = SQLSession.query(Users).filter(Users.user_id == user_id).first()
+		target = SQLSession.query(Users).filter(Users.user_id == target_id).first()
 		SQLSession.add(chat)
 		SQLSession.flush()
-		chat_member = ChatMembers()
-		chat_member.chat_id = chat.chat_id
-		chat_member.user_id = user_id
-		chat_member.is_admin = True
-		chat_member.joined_at = datetime.now()
+		symmetric_key = ChatMembers.generate_symmetric_key()
+		chat_member = ChatMembers(chat.chat_id, user_id, True, datetime.now(), symmetric_key, user.get_public_key())
 		SQLSession.add(chat_member)
-		chat_member = ChatMembers()
-		chat_member.chat_id = chat.chat_id
-		chat_member.user_id = target_id
-		chat_member.is_admin = True
-		chat_member.joined_at = datetime.now()
+		chat_member = ChatMembers(chat.chat_id, target_id, True, datetime.now(), symmetric_key, target.get_public_key())
 		SQLSession.add(chat_member)
 		SQLSession.commit()
 
